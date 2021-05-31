@@ -4,5 +4,5 @@ docker run -ti --rm \
            -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
 	   -v $(pwd):/root/working \
 	   todd_test \
-	   konsole
+	   /bin/bash --rcfile /root/.profile
 	   

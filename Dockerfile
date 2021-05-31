@@ -20,7 +20,7 @@ RUN apt-get -y install ros-melodic-desktop-full
 RUN apt-get -y install net-tools
 RUN apt-get -y install iputils-ping
 
-RUN echo 'root:robots' | chpasswd 
+RUN echo 'root:robots' | chpasswd
 
 ENV DONT_PROMPT_WSL_INSTALL=TRUE
 RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add -
@@ -53,3 +53,5 @@ RUN rm -rf /root/konsole
 
 RUN mkdir working
 WORKDIR /root/working
+
+RUN printf "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
