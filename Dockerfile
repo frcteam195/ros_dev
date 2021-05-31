@@ -56,7 +56,7 @@ WORKDIR /root/working
 
 RUN printf "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
 
-RUN apt-get install python-pip
+RUN apt-get -y install python-pip
 RUN pip install -U rosdep
 RUN rosdep init
 RUN rosdep update
