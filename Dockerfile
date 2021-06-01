@@ -64,3 +64,7 @@ RUN rosdep update
 RUN pip install -U rosinstall vcstools rospkg
 
 RUN printf "umask 000\n" >> /root/.bashrc
+
+RUN printf "#!/bin/bash\nsysctl -w net.ipv4.tcp_keepalive_intvl=60 net.ipv4.tcp_keepalive_probes=5 net.ipv4.tcp_keepalive_time=300" >> /root/.sysctl.sh
+RUN printf "/root/.sysctl.sh >/dev/null\n" >> /root/.bashrc
+RUN chmod a+x /root/.sysctl.sh
