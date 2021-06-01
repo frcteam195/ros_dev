@@ -54,7 +54,7 @@ RUN rm -rf /root/konsole
 RUN mkdir working
 WORKDIR /root/working
 
-RUN printf "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
+RUN printf "\nsource /opt/ros/melodic/setup.bash\n" >> /root/.bashrc
 
 RUN apt-get -y install python-pip
 RUN pip install -U rosdep
@@ -62,3 +62,5 @@ RUN rosdep init
 RUN rosdep update
 
 RUN pip install -U rosinstall vcstools rospkg
+
+RUN printf "umask 000\n" >> /root/.bashrc
