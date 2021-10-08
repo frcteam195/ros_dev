@@ -22,13 +22,6 @@ RUN apt-get -y install iputils-ping
 
 RUN echo 'root:robots' | chpasswd
 
-ENV DONT_PROMPT_WSL_INSTALL=TRUE
-RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add -
-RUN add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-RUN apt-get update
-RUN apt-get install -y code
-RUN mkdir /vscodeusr
-
 RUN apt-get install -y vim
 RUN apt-get install -y emacs
 
@@ -63,8 +56,4 @@ RUN rosdep update
 
 RUN pip install -U rosinstall vcstools rospkg
 
-RUN printf "umask 000\n" >> /root/.bashrc
-
-RUN printf "#!/bin/bash\nsysctl -w net.ipv4.tcp_keepalive_intvl=60 net.ipv4.tcp_keepalive_probes=5 net.ipv4.tcp_keepalive_time=300" >> /root/.sysctl.sh
-RUN printf "/root/.sysctl.sh >/dev/null\n" >> /root/.bashrc
-RUN chmod a+x /root/.sysctl.sh
+RUN printf "umask 002\n" >> /root/.bashrc
