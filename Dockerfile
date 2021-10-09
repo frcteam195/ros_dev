@@ -56,4 +56,5 @@ RUN rosdep update
 
 RUN pip install -U rosinstall vcstools rospkg
 
+RUN cp /root/.bashrc /mnt/.bashrc
 RUN printf "umask 002\n" >> /mnt/.bashrc
