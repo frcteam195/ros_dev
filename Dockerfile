@@ -57,4 +57,9 @@ RUN rosdep update
 RUN pip install -U rosinstall vcstools rospkg
 
 RUN cp /root/.bashrc /mnt/.bashrc
+RUN cp /root/.profile /mnt/.profile
+RUN cp -r /root/.ros /mnt/.ros
+RUN cp -r /root/.cache /mnt/.cache
+
 RUN printf "umask 002\n" >> /mnt/.bashrc
+RUN printf "source /opt/ros/melodic/setup.bash" >> /mnt/.bashrc
