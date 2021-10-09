@@ -13,6 +13,7 @@ docker run -ti --rm \
 	   --volume="/etc/group:/etc/group:ro" \
        --volume="/etc/passwd:/etc/passwd:ro" \
        --volume="/etc/shadow:/etc/shadow:ro" \
+       --net=host \
 	   ck_ros \
 	   /bin/bash --rcfile /mnt/.bashrc
 	   
