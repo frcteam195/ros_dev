@@ -14,6 +14,8 @@ docker run -ti --rm \
        --volume="/etc/passwd:/etc/passwd:ro" \
        --volume="/etc/shadow:/etc/shadow:ro" \
        --net=host \
+       -e HOME=/mnt/working \
+	   --device=/dev/dri:/dev/dri \
 	   ck_ros \
 	   /bin/bash --rcfile /mnt/.bashrc
 	   
