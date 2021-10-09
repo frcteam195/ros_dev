@@ -44,10 +44,10 @@ RUN cp ../data/color-schemes/Otto.colorscheme /usr/local/share/konsole
 WORKDIR /root
 RUN rm -rf /root/konsole
 
-RUN mkdir working
-WORKDIR /root/working
+RUN mkdir /mnt/working
+WORKDIR /mnt/working
 
-RUN printf "\nsource /opt/ros/melodic/setup.bash\n" >> /root/.bashrc
+RUN printf "\nsource /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
 
 RUN apt-get -y install python-pip
 RUN pip install -U rosdep
@@ -56,4 +56,4 @@ RUN rosdep update
 
 RUN pip install -U rosinstall vcstools rospkg
 
-RUN printf "umask 002\n" >> /root/.bashrc
+RUN printf "umask 002\n" >> /mnt/.bashrc
