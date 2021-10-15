@@ -16,6 +16,6 @@ docker run -ti --rm \
        --net=host \
        -e HOME=/mnt/working \
 	   --device=/dev/dri:/dev/dri \
-	   ck_ros \
+	   ck-ros-dev \
 	   /bin/bash --rcfile /mnt/.bashrc
 	   
