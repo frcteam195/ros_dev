@@ -1,4 +1,4 @@
 docker:
-	docker build -t ck-ros-dev .
+	docker build -t guitar24t/ck-ros-dev .
 
 

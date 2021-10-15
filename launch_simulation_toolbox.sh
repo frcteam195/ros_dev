@@ -3,6 +3,7 @@ xhost +
 export GID=$(id -g)
 
 docker run -ti --rm \
+           --hostname "ck-ros-dev" \
 	   -e DISPLAY=$DISPLAY \
 	   --privileged \
 	   -e XAUTHORITY=$XAUTHORITY \
@@ -16,6 +17,6 @@ docker run -ti --rm \
        --net=host \
        -e HOME=/mnt/working \
 	   --device=/dev/dri:/dev/dri \
-	   ck-ros-dev \
+	   guitar24t/ck-ros-dev \
 	   /bin/bash --rcfile /mnt/.bashrc
 	   
