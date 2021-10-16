@@ -3,7 +3,6 @@ xhost +
 export GID=$(id -g)
 
 docker run -ti --rm \
-           --hostname "ck-ros-dev" \
 	   -e DISPLAY=$DISPLAY \
 	   --privileged \
 	   -e XAUTHORITY=$XAUTHORITY \
