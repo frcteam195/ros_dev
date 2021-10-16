@@ -56,6 +56,7 @@ RUN rosdep update
 
 RUN pip install -U rosinstall vcstools rospkg
 
+RUN echo "export PS1=\"\e[0;31mck-ros-dev# \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$\"" >> /root/.bashrc
 RUN cp /root/.bashrc /mnt/.bashrc
 RUN cp /root/.profile /mnt/.profile
 RUN cp -r /root/.ros /mnt/.ros
@@ -63,4 +64,3 @@ RUN cp -r /root/.cache /mnt/.cache
 
 RUN printf "umask 002\n" >> /mnt/.bashrc
 RUN printf "source /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
-RUN echo "export PS1=\"\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$\"" >> /mnt/.bashrc
