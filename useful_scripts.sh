@@ -1,6 +1,6 @@
 forall() {
 	COMMAND=$@
-	if [ ${#COMMAND[@]} -le 1 ]; then
+	if [ ${#@} -lt 1 ]; then
     	echo "No command entered! Please enter a command to run!"
 		return;
 	fi
