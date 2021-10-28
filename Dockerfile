@@ -64,3 +64,13 @@ RUN cp -r /root/.cache /mnt/.cache
 
 RUN printf "umask 002\n" >> /mnt/.bashrc
 RUN printf "source /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
+
+WORKDIR /tmp
+RUN curl -L https://developer.nvidia.com/embedded/dlc/l4t-gcc-7-3-1-toolchain-64-bit -o toolchain.tar.xz
+RUN unxz toolchain.tar.xz
+RUN tar -xvf toolchain.tar
+RUN mv gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu /jetsontoolchain
+RUN rm -Rf toolchain.tar
+
+WORKDIR /mnt/working
+
