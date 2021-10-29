@@ -1,4 +1,4 @@
-FROM phanect/kubuntu:18.04
+FROM ubuntu:18.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -28,21 +28,6 @@ RUN apt-get install -y emacs
 RUN apt-get install -y git
 RUN apt-get install -y extra-cmake-modules
 RUN apt-get install -y libkf5*
-RUN apt-get remove -y konsole
-
-WORKDIR /root
-RUN git clone https://github.com/michaelgtodd/konsole.git
-WORKDIR /root/konsole/
-RUN mkdir build
-WORKDIR /root/konsole/build
-RUN cmake ..
-RUN make
-RUN make install
-RUN cp ../data/color-schemes/Otto.colorscheme /usr/share/konsole
-RUN cp ../data/color-schemes/Otto.colorscheme /usr/local/share/konsole
-
-WORKDIR /root
-RUN rm -rf /root/konsole
 
 RUN mkdir /mnt/working
 WORKDIR /mnt/working
