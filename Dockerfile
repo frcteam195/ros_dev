@@ -27,7 +27,6 @@ RUN apt-get install -y emacs
 
 RUN apt-get install -y git
 RUN apt-get install -y extra-cmake-modules
-RUN apt-get install -y libkf5*
 
 RUN mkdir /mnt/working
 WORKDIR /mnt/working
