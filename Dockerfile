@@ -33,6 +33,7 @@ WORKDIR /mnt/working
 
 RUN printf "\nsource /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
 
+RUN apt-get -y install libboost-all-dev
 RUN apt-get -y install python-pip
 RUN pip install -U rosdep
 RUN rosdep init
