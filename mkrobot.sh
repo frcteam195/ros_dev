@@ -24,8 +24,11 @@ clean ()
   cd *_Robot/catkin_ws/src
   find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
   find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -v ".*_Robot" | grep -v ^../../../third_party_libs$ | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
-  cd ..
+  cd .. 
   catkin_make clean
+
+  rm -rf /mnt/working/*_Robot/outputs/*/build/*
+  rm -rf /mnt/working/*_Robot/outputs/*/devel/*
 }
 
 clone ()

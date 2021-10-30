@@ -8,6 +8,15 @@ SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
 set(CROSS_COMPILE                   ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-)
 
+SET(CMAKE_INSTALL_PREFIX "/jetsonfs")
+set(CMAKE_SYSROOT ${CMAKE_INSTALL_PREFIX})
+set(CMAKE_FIND_ROOT_PATH ${CMAKE_INSTALL_PREFIX})
+set(CMAKE_PREFIX_PATH "/jetsonfs/opt/ros/melodic")
+list(APPEND CMAKE_PREFIX_PATH "/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/lib/")
+list(APPEND CMAKE_PREFIX_PATH "/jetsonfs/opt/ros/melodic/lib/")
+link_directories("/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/lib/")
+link_directories("/jetsonfs/opt/ros/melodic/lib/")
+
 set(_CMAKE_TOOLCHAIN_PREFIX         ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-gcc-${CMAKE_EXECUTABLE_SUFFIX})
 set(CMAKE_AR                        ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-gcc-ar${CMAKE_EXECUTABLE_SUFFIX} CACHE FILEPATH "Archiver")
 set(CMAKE_ASM_COMPILER              ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-gcc${CMAKE_EXECUTABLE_SUFFIX})
@@ -18,6 +27,7 @@ set(CMAKE_OBJCOPY                   ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-ob
 set(CMAKE_RANLIB                    ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-ranlib${CMAKE_EXECUTABLE_SUFFIX} CACHE INTERNAL "")
 set(CMAKE_SIZE                      ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-size${CMAKE_EXECUTABLE_SUFFIX} CACHE INTERNAL "")
 set(CMAKE_STRIP                     ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-strip${CMAKE_EXECUTABLE_SUFFIX} CACHE INTERNAL "")
+set(RT_LIBRARY                      ${JETSON_TOOLCHAIN_PATH}../aarch64-linux-gnu/libc/usr/lib/librt.so)
 
 set(CMAKE_C_FLAGS                   "-Wno-psabi -fdata-sections -ffunction-sections -Wl,--gc-sections" CACHE INTERNAL "")
 set(CMAKE_CXX_FLAGS                 "${CMAKE_C_FLAGS} -std=c++11 -Wno-write-strings" CACHE INTERNAL "")
