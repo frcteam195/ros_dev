@@ -1,7 +1,7 @@
 xhost +
 
 export GID=$(id -g)
-XAUTH=$HOME/.docker.xauth
+XAUTH=/tmp/.docker.xauth
 touch $XAUTH
 XDISPL=`xauth nlist $DISPLAY`
 
