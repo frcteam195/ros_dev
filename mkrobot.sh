@@ -39,7 +39,34 @@ clone ()
 
 build ()
 {
+    
+  if [ $# -eq 0 ]
+  then
+    ARCHITECTURE="x86_64"
+  else
+    ARCHITECTURE=$1
+  fi
+
+  case "$ARCHITECTURE" in
+    "x86_64")
+      ;;
+    "aarch64")
+      ;;
+    *)
+      echo "Invalid architecture \"$1\" supported architectures are: x86_64 aarch64"
+      exit
+      ;;
+  esac
+
+  echo "Targetting $ARCHITECTURE"
+
   cd $SCRIPT_DIR/..
+
+  find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -f {}/catkin_ws/build
+  find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -f {}/catkin_ws/devel
+
+  find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} ln -s {}/outputs/$ARCHITECTURE/build {}/catkin_ws/build
+  find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} ln -s {}/outputs/$ARCHITECTURE/devel {}/catkin_ws/devel
 
   if [ -d "./third_party_libs" ]
   then
@@ -54,7 +81,25 @@ build ()
   find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
   find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -v ".*_Robot" | grep -v ^../../../third_party_libs$ | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
   cd ..
-  catkin_make
+
+  case "$ARCHITECTURE" in
+    "x86_64")
+      catkin_make -DROBOT_ARCHITECTURE_X86_64=TRUE
+      ;;
+    "aarch64")
+      catkin_make \
+        -DROBOT_ARCHITECTURE_AARCH64=TRUE \
+        -DCMAKE_TOOLCHAIN_FILE=/mnt/working/ros_dev/l4t_dockerfile/aarch64_jetson_toolchain.cmake \
+        -DJETSON_TOOLCHAIN_PATH=/jetsontoolchain/bin/ \
+        -DCATKIN_ENABLE_TESTING=OFF
+      ;;
+    *)
+      echo "Invalid architecture \"$1\" supported architectures are: x86_64 aarch64"
+      exit
+      ;;
+  esac
+
+  
 }
 
 if [ $# -eq 0 ]
@@ -64,7 +109,7 @@ fi
 
 case "$1" in
   "build")
-    build
+    build $2
     ;;
   "clone")
     clone
