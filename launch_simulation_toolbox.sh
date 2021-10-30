@@ -7,7 +7,7 @@ XDISPL=`xauth nlist $DISPLAY`
 
 if [ ! -z "$XDISPL" ]
 then
-  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | sudo xauth -f $XAUTH nmerge -
+  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
 fi
 
 chmod 777 $XAUTH
