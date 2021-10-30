@@ -21,6 +21,6 @@ docker run -ti --rm \
        --net=host \
        -e HOME=/mnt/working \
 	   --device=/dev/dri:/dev/dri \
-	   ck_jetson_run \
+	   guitar24t/ck_jetson_run \
 	   /bin/bash --rcfile /mnt/.bashrc
 	   
