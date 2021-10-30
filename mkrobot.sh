@@ -68,12 +68,28 @@ build ()
   find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} ln -s {}/outputs/$ARCHITECTURE/build {}/catkin_ws/build
   find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} ln -s {}/outputs/$ARCHITECTURE/devel {}/catkin_ws/devel
 
-  if [ -d "./third_party_libs" ]
-  then
-    echo Making third party libraries...
-    cd third_party_libs
-    find . -maxdepth  1 | grep -v ^.$ | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make"
-  fi
+  case "$ARCHITECTURE" in
+    "x86_64")
+        if [ -d "./third_party_libs" ]
+        then
+          echo Making third party libraries...
+          cd third_party_libs
+          find . -maxdepth  1 | grep -v ^.$ | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make x86_64"
+        fi
+      ;;
+    "aarch64")
+        if [ -d "./third_party_libs" ]
+        then
+          echo Making third party libraries...
+          cd third_party_libs
+          find . -maxdepth  1 | grep -v ^.$ | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make aarch64"
+        fi
+      ;;
+    *)
+      ;;
+  esac
+  
+
 
   cd $SCRIPT_DIR/..
 
