@@ -3,11 +3,17 @@ xhost +
 export GID=$(id -g)
 XAUTH=/$HOME/.docker.xauth
 touch $XAUTH
-xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+XDISPL=`xauth nlist $DISPLAY`
+
+if [ ! -z "$XDISPL" ]
+then
+  echo $XDISPL | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+fi
+
 chmod 777 $XAUTH
 
 if [[ $OSTYPE == 'darwin'* ]]; then
-  DISPLAY_CMD=host.docker.internal:0
+  DISPLAY_CMD=`echo $DISPLAY | sed 's/^[^:]*\(.*\)/host.docker.internal\1/'`
 else
   DISPLAY_CMD=$DISPLAY
 fi
