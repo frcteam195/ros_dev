@@ -6,8 +6,14 @@ touch $XAUTH
 xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
 chmod 777 $XAUTH
 
+if [[ $OSTYPE == 'darwin'* ]]; then
+  DISPLAY_CMD=host.docker.internal:0
+else
+  DISPLAY_CMD=$DISPLAY
+fi
+
 docker run -ti --rm \
-	   -e DISPLAY=$DISPLAY \
+	   -e DISPLAY=$DISPLAY_CMD \
 	   --privileged \
 	   -e XAUTHORITY=$XAUTH \
        -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
