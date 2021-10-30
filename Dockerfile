@@ -57,5 +57,15 @@ RUN tar -xvf toolchain.tar
 RUN mv gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu /jetsontoolchain
 RUN rm -Rf toolchain.tar
 
+RUN apt-get install git-lfs
+RUN git clone https://github.com/frcteam195/ck_jetson_run_tar.git
+WORKDIR /tmp/ck_jetson_run_tar
+RUN git lfs pull
+RUN mkdir -p /jetsonfs
+RUN tar -xzvf ck_jetson_run_10x29x21.tar.gz --directory /jetsonfs
+
+WORKDIR /tmp
+RUN rm -Rf ck_jetson_run_tar
+
 WORKDIR /mnt/working
 
