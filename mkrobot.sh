@@ -4,8 +4,23 @@ SCRIPT_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 help_text () 
 {
-  echo "No arguments provided, supported  are: build clone clean"
+  echo -e "No arguments provided, supported  are:\n\tbuild \n\tclone \n\tclean \n\trebuild \n\tupdate"
   exit 1
+}
+
+rebuild()
+{
+    clean
+    build
+}
+
+update()
+{
+    source $SCRIPT_DIR/useful_scripts.sh
+    cd $SCRIPT_DIR/..
+    forall git pull
+    cd $SCRIPT_DIR/../third_party_libs
+    forall git pull
 }
 
 clean ()
@@ -135,6 +150,12 @@ case "$1" in
     ;;
   "clean")
     clean
+    ;;
+  "rebuild")
+    rebuild
+    ;;
+  "update")
+    update
     ;;
   *)
     help_text
