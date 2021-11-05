@@ -143,7 +143,7 @@ build ()
         then
           echo Making third party libraries...
           cd third_party_libs
-          find . -maxdepth  1 | grep -v ^.$ | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make x86_64"
+          cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make x86_64"
         fi
       ;;
     "aarch64")
@@ -151,7 +151,7 @@ build ()
         then
           echo Making third party libraries...
           cd third_party_libs
-          find . -maxdepth  1 | grep -v ^.$ | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make aarch64"
+          cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make aarch64"
         fi
       ;;
     *)
