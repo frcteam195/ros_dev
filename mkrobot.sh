@@ -65,8 +65,8 @@ build ()
 
   cd $SCRIPT_DIR/..
 
-  find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -f {}/catkin_ws/build
-  find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -f {}/catkin_ws/devel
+  find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -rf {}/catkin_ws/build
+  find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -rf {}/catkin_ws/devel
 
   find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} ln -s {}/outputs/$ARCHITECTURE/build {}/catkin_ws/build
   find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} ln -s {}/outputs/$ARCHITECTURE/devel {}/catkin_ws/devel
