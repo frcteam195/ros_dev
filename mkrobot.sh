@@ -8,6 +8,12 @@ help_text ()
   exit 1
 }
 
+node_help_text()
+{
+	echo -e "\nUsage: mkrobot.sh node my_new_node https://new.gitrepo.link\n"
+	exit 1
+}
+
 rebuild()
 {
     clean
@@ -21,6 +27,50 @@ update()
     forall git pull
     cd $SCRIPT_DIR/../third_party_libs
     forall git pull
+}
+
+node()
+{
+	if [ -z "${1}" ]; then
+		echo -e "\nNode name is not specified. Please enter a node name"
+		node_help_text
+		return
+	fi
+	if [[ "${1}" = *[[:space:]]* ]]
+	then
+		echo -e "\nPlease enter a node name that does not have any spaces"
+		node_help_text
+		return
+	fi
+
+	if [[ "${1}" != *_node ]]
+	then
+		echo -e "\nPlease enter a node name that ends in node"
+		node_help_text
+		return
+	fi
+
+	cd $SCRIPT_DIR/..
+	git clone git@github.com:frcteam195/template_node.git
+	rm -Rf template_node/.git
+
+	mv template_node/ "${1}/"
+	cd ${1}
+	find . -type f | grep -v ^.$ | xargs sed -i "s/tt_node/${1}/g"
+	mv src/tt_node.cpp "src/${1}.cpp"
+
+	if [ -z "${2}" ]; then
+		return
+	fi
+	cd $SCRIPT_DIR/..
+	git clone "${2}" temp_repo
+	shopt -s dotglob
+	mv temp_repo/* "${1}"
+	cd "${1}"
+	git add -A
+	git commit -m "Initial commit"
+	git push
+	rm -Rf temp_repo/
 }
 
 clean ()
@@ -52,7 +102,7 @@ clone ()
   cat *_Robot/ros_projects.txt | xargs -I {} git clone {}
   mkdir -p third_party_libs
   cd third_party_libs
-  cat ../*_Robot/third_party_projects.txt | xargs -I {} git clone {}
+  cat ../*_Robot/third_party_projects.txt | xargs -l git clone $@
 }
 
 build ()
@@ -76,9 +126,10 @@ build ()
       ;;
   esac
 
-  echo "Targetting $ARCHITECTURE"
+  echo "Targeting $ARCHITECTURE"
 
   cd $SCRIPT_DIR/..
+  find -name "._*" -delete
 
   find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -rf {}/catkin_ws/build
   find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -rf {}/catkin_ws/devel
@@ -92,7 +143,7 @@ build ()
         then
           echo Making third party libraries...
           cd third_party_libs
-          find . -maxdepth  1 | grep -v ^.$ | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make x86_64"
+          cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make x86_64"
         fi
       ;;
     "aarch64")
@@ -100,7 +151,7 @@ build ()
         then
           echo Making third party libraries...
           cd third_party_libs
-          find . -maxdepth  1 | grep -v ^.$ | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make aarch64"
+          cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make aarch64"
         fi
       ;;
     *)
@@ -150,6 +201,9 @@ case "$1" in
     ;;
   "clean")
     clean
+    ;;
+  "node")
+    node "${2}" "${3}"
     ;;
   "rebuild")
     rebuild
