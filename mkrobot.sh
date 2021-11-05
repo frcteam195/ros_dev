@@ -126,7 +126,7 @@ build ()
       ;;
   esac
 
-  echo "Targetting $ARCHITECTURE"
+  echo "Targeting $ARCHITECTURE"
 
   cd $SCRIPT_DIR/..
   find -name "._*" -delete
