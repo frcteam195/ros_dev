@@ -70,6 +70,7 @@ node()
 	git add -A
 	git commit -m "Initial commit"
 	git push
+	rm -Rf temp_repo/
 }
 
 clean ()
