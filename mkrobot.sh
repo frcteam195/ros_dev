@@ -79,6 +79,7 @@ build ()
   echo "Targetting $ARCHITECTURE"
 
   cd $SCRIPT_DIR/..
+  find -name "._*" -delete
 
   find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -rf {}/catkin_ws/build
   find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} rm -rf {}/catkin_ws/devel
