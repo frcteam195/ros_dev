@@ -8,6 +8,12 @@ help_text ()
   exit 1
 }
 
+node_help_text()
+{
+	echo -e "\nUsage: mkrobot.sh node my_new_node https://new.gitrepo.link\n"
+	exit 1
+}
+
 rebuild()
 {
     clean
@@ -21,6 +27,36 @@ update()
     forall git pull
     cd $SCRIPT_DIR/../third_party_libs
     forall git pull
+}
+
+node()
+{
+	if [ -z "${1}" ]; then
+		echo -e "\nNode name is not specified. Please enter a node name"
+		node_help_text
+		return
+	fi
+	if [[ "${1}" = *[[:space:]]* ]]
+	then
+		echo -e "\nPlease enter a node name that does not have any spaces"
+		node_help_text
+		return
+	fi
+
+	if [[ "${1}" != *_node ]]
+	then
+		echo -e "\nPlease enter a node name that ends in node"
+		node_help_text
+		return
+	fi
+
+	cd $SCRIPT_DIR/..
+	git clone git@github.com:frcteam195/template_node.git
+	rm -Rf template_node/.git
+
+	mv template_node/ "${1}/"
+	cd ${1}
+	find . -type f | grep -v ^.$ | xargs sed -i "s/tt_node/${1}/g"
 }
 
 clean ()
@@ -151,6 +187,9 @@ case "$1" in
     ;;
   "clean")
     clean
+    ;;
+  "node")
+    node "${2}" "${3}"
     ;;
   "rebuild")
     rebuild
