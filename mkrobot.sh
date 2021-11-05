@@ -57,6 +57,7 @@ node()
 	mv template_node/ "${1}/"
 	cd ${1}
 	find . -type f | grep -v ^.$ | xargs sed -i "s/tt_node/${1}/g"
+	mv src/tt_node.cpp "src/${1}.cpp"
 }
 
 clean ()
