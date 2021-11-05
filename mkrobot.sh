@@ -58,6 +58,18 @@ node()
 	cd ${1}
 	find . -type f | grep -v ^.$ | xargs sed -i "s/tt_node/${1}/g"
 	mv src/tt_node.cpp "src/${1}.cpp"
+
+	if [ -z "${2}" ]; then
+		return
+	fi
+	cd $SCRIPT_DIR/..
+	git clone "${2}" temp_repo
+	shopt -s dotglob
+	mv temp_repo/* "${1}"
+	cd "${1}"
+	git add -A
+	git commit -m "Initial commit"
+	git push
 }
 
 clean ()
