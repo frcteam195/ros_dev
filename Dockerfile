@@ -41,7 +41,7 @@ RUN rosdep update
 
 RUN pip install -U rosinstall vcstools rospkg
 
-RUN echo "export PS1=\"\e[1;35mck-ros-dev> \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$\"" >> /root/.bashrc
+RUN echo "export PS1=\"\e[1;35mck-ros> \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$\"" >> /root/.bashrc
 RUN cp /root/.bashrc /mnt/.bashrc
 RUN cp /root/.profile /mnt/.profile
 RUN cp -r /root/.ros /mnt/.ros
