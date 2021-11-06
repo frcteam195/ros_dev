@@ -184,7 +184,7 @@ build ()
     "aarch64")
       catkin_make \
         -DROBOT_ARCHITECTURE_AARCH64=TRUE \
-        -DCMAKE_TOOLCHAIN_FILE=/mnt/working/ros_dev/l4t_dockerfile/aarch64_jetson_toolchain.cmake \
+        -DCMAKE_TOOLCHAIN_FILE=/mnt/working/ros_dev/aarch64/aarch64_jetson_toolchain.cmake \
         -DJETSON_TOOLCHAIN_PATH=/jetsontoolchain/bin/ \
         -DCATKIN_ENABLE_TESTING=OFF
       ;;
