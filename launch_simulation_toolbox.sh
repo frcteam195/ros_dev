@@ -24,7 +24,7 @@ OS_SPECIFIC_FLAGS=""
 if [[ "$OS_NAME" == *"penguin"* ]]; then
 	echo "Chrome OS detected"
 else
-	OS_SPECIFIC_FLAGS="--privileged"
+	OS_SPECIFIC_FLAGS="--privileged --device=/dev/dri:/dev/dri"
 fi
 
 docker run -ti --rm \
@@ -41,7 +41,6 @@ docker run -ti --rm \
        --volume="/etc/shadow:/etc/shadow:ro" \
        --net=host \
        -e HOME=/mnt/working \
-	   --device=/dev/dri:/dev/dri \
 	   guitar24t/ck-ros-dev \
 	   /bin/bash --rcfile /mnt/.bashrc
 	   
