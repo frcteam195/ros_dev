@@ -104,7 +104,7 @@ clone ()
   cat *_Robot/ros_projects.txt | xargs -I {} git clone {}
   mkdir -p third_party_libs
   cd third_party_libs
-  cat ../*_Robot/third_party_projects.txt | xargs -l git clone $@
+  cat ../*_Robot/third_party_projects.txt | xargs -I {} git clone {}
 }
 
 build ()
