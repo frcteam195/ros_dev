@@ -1,6 +1,8 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+OS_ARCHITECTURE=$(arch)
+OS_NAME=$(uname -a)
 
 help_text () 
 {
@@ -110,18 +112,26 @@ build ()
     
   if [ $# -eq 0 ]
   then
-    ARCHITECTURE="x86_64"
+    ARCHITECTURE="native"
   else
     ARCHITECTURE=$1
   fi
 
+  if [ $OS_ARCHITECTURE == 'aarch64' ] || [ $OS_ARCHITECTURE == 'arm64' ]
+  then
+    if [ $ARCHITECTURE == 'aarch64' ]
+    then
+      ARCHITECTURE='native'
+    fi
+  fi
+
   case "$ARCHITECTURE" in
-    "x86_64")
+    "native")
       ;;
     "aarch64")
       ;;
     *)
-      echo "Invalid architecture \"$1\" supported architectures are: x86_64 aarch64"
+      echo "Invalid architecture \"$1\" supported architectures are: native aarch64"
       exit
       ;;
   esac
@@ -138,12 +148,12 @@ build ()
   find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} ln -s {}/outputs/$ARCHITECTURE/devel {}/catkin_ws/devel
 
   case "$ARCHITECTURE" in
-    "x86_64")
+    "native")
         if [ -d "./third_party_libs" ]
         then
           echo Making third party libraries...
           cd third_party_libs
-          cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make x86_64"
+          cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make native"
         fi
       ;;
     "aarch64")
@@ -168,8 +178,8 @@ build ()
   cd ..
 
   case "$ARCHITECTURE" in
-    "x86_64")
-      catkin_make -DROBOT_ARCHITECTURE_X86_64=TRUE
+    "native")
+      catkin_make -DROBOT_ARCHITECTURE_NATIVE=TRUE
       ;;
     "aarch64")
       catkin_make \
@@ -179,7 +189,7 @@ build ()
         -DCATKIN_ENABLE_TESTING=OFF
       ;;
     *)
-      echo "Invalid architecture \"$1\" supported architectures are: x86_64 aarch64"
+      echo "Invalid architecture \"$1\" supported architectures are: native aarch64"
       exit
       ;;
   esac
