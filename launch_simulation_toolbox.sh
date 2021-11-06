@@ -1,6 +1,7 @@
 xhost +
 
 export GID=$(id -g)
+OS_NAME=$(uname -a)
 XAUTH=/tmp/.docker.xauth
 touch $XAUTH
 XDISPL=`xauth nlist $DISPLAY`
@@ -18,9 +19,17 @@ else
   DISPLAY_CMD=$DISPLAY
 fi
 
+OS_SPECIFIC_FLAGS=""
+
+if [[ "$OS_NAME" == *"penguin"* ]]; then
+	echo "Chrome OS detected"
+else
+	OS_SPECIFIC_FLAGS="--privileged --device=/dev/dri:/dev/dri"
+fi
+
 docker run -ti --rm \
 	   -e DISPLAY=$DISPLAY_CMD \
-	   --privileged \
+	   $OS_SPECIFIC_FLAGS \
 	   -e XAUTHORITY=$XAUTH \
        -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
 	   -v $(pwd):/mnt/working \
@@ -32,7 +41,6 @@ docker run -ti --rm \
        --volume="/etc/shadow:/etc/shadow:ro" \
        --net=host \
        -e HOME=/mnt/working \
-	   --device=/dev/dri:/dev/dri \
 	   guitar24t/ck-ros-dev \
 	   /bin/bash --rcfile /mnt/.bashrc
 	   
