@@ -27,11 +27,13 @@ else
 	OS_SPECIFIC_FLAGS="--privileged --device=/dev/dri:/dev/dri"
 fi
 
+cp ~/.gitconfig $(pwd)
+
 docker run -ti --rm \
 	   -e DISPLAY=$DISPLAY_CMD \
 	   $OS_SPECIFIC_FLAGS \
 	   -e XAUTHORITY=$XAUTH \
-       -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
+       	   -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
 	   -v $(pwd):/mnt/working \
 	   -v /tmp/.X11-unix:/tmp/.X11-unix \
 	   -v ~/.ssh:/home/$USER/.ssh \
