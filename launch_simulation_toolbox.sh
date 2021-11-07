@@ -34,6 +34,7 @@ docker run -ti --rm \
        -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
 	   -v $(pwd):/mnt/working \
 	   -v /tmp/.X11-unix:/tmp/.X11-unix \
+	   -v ~/.ssh:/home/$USER/.ssh \
 	   -v $XAUTH:$XAUTH \
 	   --user $UID:$GID \
 	   --volume="/etc/group:/etc/group:ro" \
