@@ -44,6 +44,6 @@ docker run -ti --rm \
        --volume="/etc/shadow:/etc/shadow:ro" \
        --net=host \
        -e HOME=/mnt/working \
-	   guitar24t/ck-ros \
+	   guitar24t/ck-ros:latest \
 	   /bin/bash --rcfile /mnt/.bashrc
 	   
