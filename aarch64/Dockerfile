@@ -49,6 +49,6 @@ RUN cp -r /root/.cache /mnt/.cache
 
 RUN printf "umask 002\n" >> /mnt/.bashrc
 RUN printf "source /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
-RUN apt-get install -y nano
+RUN apt-get install -y nano parallel
 WORKDIR /mnt/working
 

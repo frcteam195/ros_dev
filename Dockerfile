@@ -75,7 +75,7 @@ RUN cp /root/.bashrc /mnt/.bashrc
 RUN cp /root/.profile /mnt/.profile
 RUN cp -r /root/.ros /mnt/.ros
 RUN cp -r /root/.cache /mnt/.cache
-RUN apt-get install -y nano
+RUN apt-get install -y nano parallel
 WORKDIR /mnt/working
 
 RUN rm -Rf /tmp/*
