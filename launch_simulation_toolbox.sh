@@ -28,6 +28,10 @@ else
 fi
 
 cp ~/.gitconfig $(pwd)
+
+mkdir -p "$(pwd)/.parallel"
+touch "$(pwd)/.parallel/will-cite"
+
 docker pull guitar24t/ck-ros:latest || true
 #clear terminal without destroying scrollback buffer
 printf "\033[2J\033[0;0H"
