@@ -1,3 +1,36 @@
+#!/bin/bash
+#launch_simulation_toolbox.sh
+
+BASEDIR=$(dirname "$0")
+source "${BASEDIR}/useful_scripts.sh"
+
+if [[ $OSTYPE == 'darwin'* ]]; then
+	errmsg 'macOS is no longer supported. Please run this in an Ubuntu virtual machine.'
+fi
+
+if [ -f /.dockerenv ]; then
+	errmsg 'This script cannot be run inside a docker container.'
+fi
+
+if ! command -v docker &> /dev/null
+then
+	UTIL_LIST="docker.io build-essential cmake parallel"
+	if command -v apt &> /dev/null
+	then
+		infomsg "Installing utilities for Debian/Ubuntu..."
+		sudo apt-get update
+		sudo apt-get install -y ${UTIL_LIST}
+	elif command -v yum &> /dev/null
+	then
+		infomsg "Installing utilities for yum package manager..."
+		sudo yum install -y ${UTIL_LIST}
+	elif command -v snap &> /dev/null
+	then
+		infomsg "Installing utilities for snap..."
+		sudo snap install -y ${UTIL_LIST}
+	fi
+fi
+
 xhost + > /dev/null
 
 export GID=$(id -g)
@@ -22,7 +55,7 @@ fi
 OS_SPECIFIC_FLAGS=""
 
 if [[ "$OS_NAME" == *"penguin"* ]]; then
-	echo "Chrome OS detected"
+	infomsg "Chrome OS detected"
 else
 	OS_SPECIFIC_FLAGS="--privileged --device=/dev/dri:/dev/dri"
 fi

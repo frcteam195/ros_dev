@@ -3,17 +3,16 @@
 SCRIPT_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OS_ARCHITECTURE=$(arch)
 OS_NAME=$(uname -a)
+source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text () 
 {
-  echo -e "No arguments provided, supported  are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
-  exit 1
+  errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
 }
 
 node_help_text()
 {
-	echo -e "\nUsage: mkrobot.sh node my_new_node https://new.gitrepo.link\n"
-	exit 1
+	errmsg "\nUsage: mkrobot.sh node my_new_node https://new.gitrepo.link\n"
 }
 
 rebuild()
@@ -47,8 +46,8 @@ update()
 {
     if ! command -v parallel &> /dev/null
     then
-        echo "Installing parallel..."
-	sudo apt-get update
+        infomsg "Installing parallel..."
+	      sudo apt-get update
         sudo apt-get install -y parallel
     fi
     find . -name ".git" -type d -exec dirname {} \; | parallel "printf {} | git -C {} pull"
@@ -57,20 +56,20 @@ update()
 node()
 {
 	if [ -z "${1}" ]; then
-		echo -e "\nNode name is not specified. Please enter a node name"
+		errmsg "\nNode name is not specified. Please enter a node name"
 		node_help_text
 		return
 	fi
 	if [[ "${1}" = *[[:space:]]* ]]
 	then
-		echo -e "\nPlease enter a node name that does not have any spaces"
+		errmsg "\nPlease enter a node name that does not have any spaces"
 		node_help_text
 		return
 	fi
 
 	if [[ "${1}" != *_node ]]
 	then
-		echo -e "\nPlease enter a node name that ends in node"
+		errmsg "\nPlease enter a node name that ends in node"
 		node_help_text
 		return
 	fi
@@ -163,12 +162,12 @@ build ()
     "aarch64")
       ;;
     *)
-      echo "Invalid architecture \"$1\" supported architectures are: native aarch64"
+      errmsg "Invalid architecture \"$1\" supported architectures are: native aarch64"
       exit
       ;;
   esac
 
-  echo "Targeting $ARCHITECTURE"
+  infomsg "Targeting $ARCHITECTURE"
 
   cd $SCRIPT_DIR/..
   find -name "._*" -delete
@@ -183,7 +182,7 @@ build ()
     "native")
         if [ -d "./third_party_libs" ]
         then
-          echo Making third party libraries...
+          infomsg "Making third party libraries..."
           cd third_party_libs
           cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make native"
         fi
@@ -191,7 +190,7 @@ build ()
     "aarch64")
         if [ -d "./third_party_libs" ]
         then
-          echo Making third party libraries...
+          infomsg "Making third party libraries..."
           cd third_party_libs
           cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make aarch64"
         fi
@@ -221,7 +220,7 @@ build ()
         -DCATKIN_ENABLE_TESTING=OFF
       ;;
     *)
-      echo "Invalid architecture \"$1\" supported architectures are: native aarch64"
+      errmsg "Invalid architecture \"$1\" supported architectures are: native aarch64"
       exit
       ;;
   esac
