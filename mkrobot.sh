@@ -6,7 +6,7 @@ OS_NAME=$(uname -a)
 
 help_text () 
 {
-  echo -e "No arguments provided, supported  are:\n\tbuild \n\tclone \n\tclean \n\trebuild \n\tupdate"
+  echo -e "No arguments provided, supported  are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
   exit 1
 }
 
@@ -19,6 +19,18 @@ node_help_text()
 rebuild()
 {
     clean
+    build
+}
+
+rebuildros()
+{
+    cleanros
+    build
+}
+
+rebuildlibs()
+{
+    cleanlibs
     build
 }
 
@@ -75,7 +87,7 @@ node()
 	rm -Rf temp_repo/
 }
 
-clean ()
+cleanlibs ()
 {
   cd $SCRIPT_DIR/..
 
@@ -85,17 +97,26 @@ clean ()
     cd third_party_libs
     find . -maxdepth  1 | grep -v ^.$ | xargs -I {} sh -c "echo 'Attempting to clean {}' && cd {} && make clean"
   fi
+}
 
+cleanros ()
+{
   cd $SCRIPT_DIR/..
 
   cd *_Robot/catkin_ws/src
   find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
-  find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -v ".*_Robot" | grep -v ^../../../third_party_libs$ | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
+  find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -v ".*_Robot" | grep -v ^../../../third_party_libs$$
   cd .. 
   catkin_make clean
 
   rm -rf /mnt/working/*_Robot/outputs/*/build/*
   rm -rf /mnt/working/*_Robot/outputs/*/devel/*
+}
+
+clean ()
+{
+  cleanlibs
+  cleanros
 }
 
 clone ()
@@ -212,11 +233,23 @@ case "$1" in
   "clean")
     clean
     ;;
+  "cleanlibs")
+    cleanlibs
+    ;;
+  "cleanros")
+    cleanros
+    ;;
   "node")
     node "${2}" "${3}"
     ;;
   "rebuild")
     rebuild
+    ;;
+  "rebuildlibs")
+    rebuildlibs
+    ;;
+  "rebuildros")
+    rebuildros
     ;;
   "update")
     update
