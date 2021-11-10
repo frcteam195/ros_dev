@@ -1,4 +1,4 @@
-xhost +
+xhost + > /dev/null
 
 export GID=$(id -g)
 OS_NAME=$(uname -a)
