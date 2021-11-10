@@ -49,6 +49,13 @@ RUN cp -r /root/.cache /mnt/.cache
 
 RUN printf "umask 002\n" >> /mnt/.bashrc
 RUN printf "source /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
-RUN apt-get install -y nano parallel
+RUN apt-get install -y nano parallel git-lfs
+
+RUN mkdir -p /tmp/dummy
+WORKDIR /tmp/dummy
+RUN git init
+RUN git lfs install
+
 WORKDIR /mnt/working
 
+RUN rm -Rf /tmp/*
