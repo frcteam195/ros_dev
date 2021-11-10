@@ -28,7 +28,8 @@ else
 fi
 
 cp ~/.gitconfig $(pwd)
-
+docker pull guitar24t/ck-ros:latest || true
+printf "\033[2J\033[0;0H"
 docker run -ti --rm \
 	   -e DISPLAY=$DISPLAY_CMD \
 	   $OS_SPECIFIC_FLAGS \
