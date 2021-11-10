@@ -8,7 +8,7 @@ XDISPL=`xauth nlist $DISPLAY`
 
 if [ ! -z "$XDISPL" ]
 then
-  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge - > /dev/null
 fi
 
 chmod 777 $XAUTH
@@ -29,6 +29,7 @@ fi
 
 cp ~/.gitconfig $(pwd)
 docker pull guitar24t/ck-ros:latest || true
+#clear terminal without destroying scrollback buffer
 printf "\033[2J\033[0;0H"
 docker run -ti --rm \
 	   -e DISPLAY=$DISPLAY_CMD \
