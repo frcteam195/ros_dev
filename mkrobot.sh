@@ -34,13 +34,24 @@ rebuildlibs()
     build
 }
 
-update()
+update_prev()
 {
     source $SCRIPT_DIR/useful_scripts.sh
     cd $SCRIPT_DIR/..
     forall git pull
     cd $SCRIPT_DIR/../third_party_libs
     forall git pull
+}
+
+update()
+{
+    if ! command -v parallel &> /dev/null
+    then
+        echo "Installing parallel..."
+	sudo apt-get update
+        sudo apt-get install -y parallel
+    fi
+    find . -name ".git" -type d -exec dirname {} \; | parallel "printf {} | git -C {} pull"
 }
 
 node()
