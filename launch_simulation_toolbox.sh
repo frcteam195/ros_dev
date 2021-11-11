@@ -4,10 +4,7 @@
 BASEDIR=$(dirname "$0")
 source "${BASEDIR}/useful_scripts.sh"
 
-if [[ $OSTYPE == 'darwin'* ]]; then
-	errmsg 'macOS is no longer supported. Please run this in an Ubuntu virtual machine.'
-fi
-
+exit_if_macOS
 exit_if_docker
 
 if ! command -v docker &> /dev/null

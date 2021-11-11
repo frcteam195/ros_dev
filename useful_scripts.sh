@@ -22,12 +22,17 @@ infomsg()
 	printf "\n${GREEN}INFO:${NC} ${1}\n\n" >> /dev/stderr
 }
 
+exit_if_macOS()
+{
+	if [[ $OSTYPE == 'darwin'* ]]; then
+		errmsg 'macOS is no longer supported. Please run this in an Ubuntu virtual machine.'
+	fi
+}
 
 exit_if_docker()
 {
 	if [ -f /.dockerenv ]; then
 		errmsg 'This cannot be run inside a docker container.'
-		exit 1
 	fi
 }
 
@@ -35,6 +40,5 @@ exit_if_not_docker()
 {
 	if [ ! -f /.dockerenv ]; then
 		errmsg 'This must be run inside a docker container.'
-		exit 1
 	fi
 }
