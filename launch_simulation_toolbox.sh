@@ -8,9 +8,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
 	errmsg 'macOS is no longer supported. Please run this in an Ubuntu virtual machine.'
 fi
 
-if [ -f /.dockerenv ]; then
-	errmsg 'This script cannot be run inside a docker container.'
-fi
+exit_if_docker
 
 if ! command -v docker &> /dev/null
 then

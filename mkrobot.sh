@@ -140,6 +140,7 @@ clone ()
 
 build ()
 {
+  exit_if_not_docker
     
   if [ $# -eq 0 ]
   then

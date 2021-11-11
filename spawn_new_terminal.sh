@@ -3,6 +3,8 @@
 BASEDIR=$(dirname "$0")
 source "${BASEDIR}/useful_scripts.sh"
 
+exit_if_docker
+
 CONTAINER_ID=`docker ps -aq --filter "ancestor=guitar24t/ck-ros:latest" --filter "status=running"`
 
 if [ -z "${CONTAINER_ID}" ] 
