@@ -114,7 +114,9 @@ cleanros ()
 {
   cd $SCRIPT_DIR/..
 
-  cd *_Robot/catkin_ws/src
+  cd *_Robot/
+  mkdir -p catkin_ws/src
+  cd catkin_ws/src
   find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
   find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -v ".*_Robot" | grep -v ^../../../third_party_libs$$
   cd .. 
@@ -212,7 +214,9 @@ build ()
 
   cd $SCRIPT_DIR/..
 
-  cd *_Robot/catkin_ws/src
+  cd *_Robot
+  mkdir -p catkin_ws/src
+  cd catkin_ws/src
   find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
   find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -v ".*_Robot" | grep -v ^../../../third_party_libs$ | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
   cd ..
