@@ -41,9 +41,6 @@ RUN rosdep update
 
 RUN pip install -U rosinstall vcstools rospkg
 
-RUN printf "umask 002\n" >> /mnt/.bashrc
-RUN printf "source /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
-
 WORKDIR /tmp
 RUN curl -L https://developer.nvidia.com/embedded/dlc/l4t-gcc-7-3-1-toolchain-64-bit -o toolchain.tar.xz
 RUN unxz toolchain.tar.xz
@@ -71,6 +68,8 @@ RUN rm -Rf ck_jetson_run_tar
 
 RUN git clone https://github.com/frcteam195/container_support_files
 RUN cat container_support_files/bashrc_additions.txt >> /root/.bashrc
+RUN printf "umask 002\n" >> /root/.bashrc
+RUN printf "source /opt/ros/melodic/setup.bash\n" >> /root/.bashrc
 RUN cp /root/.bashrc /mnt/.bashrc
 RUN cp /root/.profile /mnt/.profile
 RUN cp -r /root/.ros /mnt/.ros

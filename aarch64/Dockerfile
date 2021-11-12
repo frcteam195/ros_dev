@@ -31,8 +31,6 @@ RUN apt-get install -y extra-cmake-modules
 RUN mkdir /mnt/working
 WORKDIR /mnt/working
 
-RUN printf "\nsource /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
-
 RUN apt-get -y install python-pip
 RUN pip install -U rosdep
 RUN rosdep init
@@ -41,14 +39,14 @@ RUN rosdep update
 RUN pip install -U rosinstall vcstools rospkg
 
 RUN git clone https://github.com/frcteam195/container_support_files
+RUN printf "umask 002\n" >> /root/.bashrc
+RUN printf "\nsource /opt/ros/melodic/setup.bash\n" >> /root/.bashrc
 RUN cat container_support_files/bashrc_additions.txt >> /root/.bashrc
 RUN cp /root/.bashrc /mnt/.bashrc
 RUN cp /root/.profile /mnt/.profile
 RUN cp -r /root/.ros /mnt/.ros
 RUN cp -r /root/.cache /mnt/.cache
 
-RUN printf "umask 002\n" >> /mnt/.bashrc
-RUN printf "source /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
 RUN apt-get install -y nano parallel git-lfs
 
 RUN mkdir -p /tmp/dummy
