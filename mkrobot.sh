@@ -7,12 +7,12 @@ source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text () 
 {
-  errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
+    errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
 }
 
 node_help_text()
 {
-	errmsg "\nUsage: mkrobot.sh node my_new_node https://new.gitrepo.link\n"
+    errmsg "\nUsage: mkrobot.sh node my_new_node https://new.gitrepo.link\n"
 }
 
 rebuild()
@@ -56,7 +56,7 @@ update()
 node()
 {
 	if [ -z "${1}" ]; then
-		errmsg "\nNode name is not specified. Please enter a node name"
+		errmsg "\nNode name is not specified. Please enter a node name" "noexit"
 		node_help_text
 		return
 	fi
@@ -94,6 +94,7 @@ node()
 	git add -A
 	git commit -m "Initial commit"
 	git push
+	cd $SCRIPT_DIR/..
 	rm -Rf temp_repo/
 }
 
@@ -140,6 +141,13 @@ clone ()
 
 build ()
 {
+  if [ ! -f /.dockerenv ]; then
+    infomsg "This command must be run in a docker container. Running in docker for you..."
+
+    cd $SCRIPT_DIR/..
+    ./ros_dev/launch_simulation_toolbox.sh "/mnt/working/ros_dev/mkrobot.sh build"
+    return;
+	fi
   exit_if_not_docker
     
   if [ $# -eq 0 ]

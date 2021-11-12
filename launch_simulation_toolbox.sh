@@ -7,6 +7,13 @@ source "${BASEDIR}/useful_scripts.sh"
 exit_if_macOS
 exit_if_docker
 
+DOCKER_RUNNING_CMD=1
+if [ ! -z "${1}" ];
+then
+	DOCKER_CMD_VAR="${1}"
+	DOCKER_RUNNING_CMD=0
+fi
+
 if ! command -v docker &> /dev/null
 then
 	UTIL_LIST="docker.io build-essential cmake parallel"
@@ -61,9 +68,11 @@ mkdir -p "$(pwd)/.parallel"
 touch "$(pwd)/.parallel/will-cite"
 
 docker pull guitar24t/ck-ros:latest || true
-#clear terminal without destroying scrollback buffer
-printf "\033[2J\033[0;0H"
-docker run -ti --rm \
+if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
+then
+	#clear terminal without destroying scrollback buffer
+	printf "\033[2J\033[0;0H"
+	docker run -it --rm \
 	   -e DISPLAY=$DISPLAY_CMD \
 	   $OS_SPECIFIC_FLAGS \
 	   -e XAUTHORITY=$XAUTH \
@@ -80,4 +89,23 @@ docker run -ti --rm \
        -e HOME=/mnt/working \
 	   guitar24t/ck-ros:latest \
 	   /bin/bash --rcfile /mnt/.bashrc
-	   
+else
+	docker run -it --rm \
+	   -e DISPLAY=$DISPLAY_CMD \
+	   $OS_SPECIFIC_FLAGS \
+	   -e XAUTHORITY=$XAUTH \
+       	   -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
+	   -v $(pwd):/mnt/working \
+	   -v /tmp/.X11-unix:/tmp/.X11-unix \
+	   -v ~/.ssh:/home/$USER/.ssh \
+	   -v $XAUTH:$XAUTH \
+	   --user $UID:$GID \
+	   --volume="/etc/group:/etc/group:ro" \
+       --volume="/etc/passwd:/etc/passwd:ro" \
+       --volume="/etc/shadow:/etc/shadow:ro" \
+       --net=host \
+       -e HOME=/mnt/working \
+	   guitar24t/ck-ros:latest \
+	   /bin/bash --rcfile /mnt/.bashrc -ci "${DOCKER_CMD_VAR}"
+fi
+

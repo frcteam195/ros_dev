@@ -15,7 +15,10 @@ NC='\033[0m' # No Color
 errmsg()
 {
 	printf "\n${RED}ERROR:${NC} ${1}\n\n" >> /dev/stderr
-	exit 1
+	if [ "${2}" != "noexit" ]
+	then
+		exit 1
+	fi
 }
 infomsg()
 {
