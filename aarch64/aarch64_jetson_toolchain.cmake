@@ -36,6 +36,7 @@ link_directories("/jetsonfs/opt/ros/melodic/")
 # link_directories("/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/lib")
 # link_directories("/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/usr/lib")
 
+set(BOOST_INCLUDEDIR                "/jetsonfs/usr/include")
 set(_CMAKE_TOOLCHAIN_PREFIX         ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-gcc-${CMAKE_EXECUTABLE_SUFFIX})
 set(CMAKE_AR                        ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-gcc-ar${CMAKE_EXECUTABLE_SUFFIX} CACHE FILEPATH "Archiver")
 set(CMAKE_ASM_COMPILER              ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-gcc${CMAKE_EXECUTABLE_SUFFIX})

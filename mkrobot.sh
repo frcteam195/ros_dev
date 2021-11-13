@@ -102,6 +102,8 @@ cleanlibs ()
 {
   cd $SCRIPT_DIR/..
 
+  find . -maxdepth 1 2>/dev/null | grep -v ^.$ | grep -v "^\./\." | grep -v  ".*_node" | grep -v  ".*_Robot" | grep -v third_party_libs | grep -v ros_dev | xargs -I {} sh -c "echo 'Attempting to clean {}' && cd {} && make clean"
+
   if [ -d "./third_party_libs" ]
   then
     echo Cleaning third party libraries...
@@ -191,6 +193,8 @@ build ()
 
   case "$ARCHITECTURE" in
     "native")
+        infomsg "Making first party libraries..."
+        find . -maxdepth 1 2>/dev/null | grep -v ^.$ | grep -v "^\./\." | grep -v  ".*_node" | grep -v  ".*_Robot" | grep -v third_party_libs | grep -v ros_dev | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make"
         if [ -d "./third_party_libs" ]
         then
           infomsg "Making third party libraries..."
@@ -199,6 +203,8 @@ build ()
         fi
       ;;
     "aarch64")
+        infomsg "Making first party libraries..."
+        find . -maxdepth 1 2>/dev/null | grep -v ^.$ | grep -v "^\./\." | grep -v  ".*_node" | grep -v  ".*_Robot" | grep -v third_party_libs | grep -v ros_dev | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && make aarch64"
         if [ -d "./third_party_libs" ]
         then
           infomsg "Making third party libraries..."
@@ -218,7 +224,7 @@ build ()
   mkdir -p catkin_ws/src
   cd catkin_ws/src
   find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
-  find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -v ".*_Robot" | grep -v ^../../../third_party_libs$ | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
+  find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep ".*_node" | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
   cd ..
 
   case "$ARCHITECTURE" in
