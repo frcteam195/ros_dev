@@ -1,5 +1,5 @@
 docker:
-	docker build -t guitar24t/ck-ros:amd64 --build-arg ARCH=amd64/ .
+	docker build -t guitar24t/ck-ros:amd64 --build-arg ARCH=amd64/ --build-arg NOW=$(date +%s) .
 
 dockerpush:
 	docker push guitar24t/ck-ros:amd64
