@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-
+ARG NOW
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
@@ -66,6 +66,9 @@ RUN ln -s /jetsonfs/usr/lib/aarch64-linux-gnu/ /usr/lib/aarch64-linux-gnu
 WORKDIR /tmp
 RUN rm -Rf ck_jetson_run_tar
 
+RUN apt-get install -y bash-completion
+
+ARG NOW
 RUN git clone https://github.com/frcteam195/container_support_files
 RUN cat container_support_files/bashrc_additions.txt >> /root/.bashrc
 RUN printf "umask 002\n" >> /root/.bashrc
@@ -74,7 +77,7 @@ RUN cp /root/.bashrc /mnt/.bashrc
 RUN cp /root/.profile /mnt/.profile
 RUN cp -r /root/.ros /mnt/.ros
 RUN cp -r /root/.cache /mnt/.cache
-RUN apt-get install -y nano parallel
+RUN apt-get install -y nano parallel libsdl2-dev
 WORKDIR /mnt/working
 
 RUN rm -Rf /tmp/*
