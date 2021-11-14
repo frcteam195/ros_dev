@@ -4,6 +4,17 @@
 BASEDIR=$(dirname "$0")
 source "${BASEDIR}/useful_scripts.sh"
 
+if [[ $(pwd) == *"ros_dev"* ]]; then
+  infomsg "This script cannot be run from this directory. Attempting to fix..."
+  cd ..
+  if [ -d "$(pwd)/$(ls | grep *_Robot)" ]; then
+    infomsg "Correct directory found. Launching..."
+  else
+    errmsg "Unable to detect the proper directory to run from..."
+    exit 1
+  fi
+fi
+
 exit_if_macOS
 exit_if_docker
 
