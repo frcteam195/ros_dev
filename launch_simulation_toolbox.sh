@@ -78,7 +78,7 @@ cp ~/.gitconfig $(pwd)
 mkdir -p "$(pwd)/.parallel"
 touch "$(pwd)/.parallel/will-cite"
 
-#docker pull guitar24t/ck-ros:latest || true
+docker pull guitar24t/ck-ros:latest || true
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
 then
 	#clear terminal without destroying scrollback buffer
