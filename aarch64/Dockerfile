@@ -1,5 +1,4 @@
 FROM nvcr.io/nvidia/l4t-base:r32.6.1
-ARG NOW
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
@@ -39,18 +38,15 @@ RUN rosdep update
 RUN pip install -U rosinstall vcstools rospkg
 
 RUN apt-get install -y bash-completion
+RUN apt-get install -y nano parallel git-lfs libsdl2-dev
 
 ARG NOW
 RUN git clone https://github.com/frcteam195/container_support_files
-RUN printf "umask 002\n" >> /root/.bashrc
-RUN printf "\nsource /opt/ros/melodic/setup.bash\n" >> /root/.bashrc
-RUN cat container_support_files/bashrc_additions.txt >> /root/.bashrc
-RUN cp /root/.bashrc /mnt/.bashrc
-RUN cp /root/.profile /mnt/.profile
+RUN cat container_support_files/bash.bashrc > /etc/bash.bashrc
+RUN rm -Rf /root/.bashrc
+RUN rm -Rf /root/.profile
 RUN cp -r /root/.ros /mnt/.ros
 RUN cp -r /root/.cache /mnt/.cache
-
-RUN apt-get install -y nano parallel git-lfs libsdl2-dev
 
 RUN mkdir -p /tmp/dummy
 WORKDIR /tmp/dummy
