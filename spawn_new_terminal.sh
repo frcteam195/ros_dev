@@ -13,4 +13,4 @@ then
     errmsg "No running ck-ros docker instance could be detected! You must first run the launch script!"
 fi
 
-docker exec -it $CONTAINER_ID /bin/bash --rcfile /mnt/.bashrc
+docker exec -it $CONTAINER_ID /bin/bash
