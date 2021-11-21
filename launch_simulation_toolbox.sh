@@ -78,7 +78,7 @@ cp ~/.gitconfig $(pwd)
 mkdir -p "$(pwd)/.parallel"
 touch "$(pwd)/.parallel/will-cite"
 
-docker pull guitar24t/ck-ros:latest || true
+#docker pull guitar24t/ck-ros:latest || true
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
 then
 	#clear terminal without destroying scrollback buffer
@@ -99,7 +99,7 @@ then
        --net=host \
        -e HOME=/mnt/working \
 	   guitar24t/ck-ros:latest \
-	   /bin/bash --rcfile /mnt/.bashrc
+	   /bin/bash
 else
 	docker run -it --rm \
 	   -e DISPLAY=$DISPLAY_CMD \
@@ -117,6 +117,6 @@ else
        --net=host \
        -e HOME=/mnt/working \
 	   guitar24t/ck-ros:latest \
-	   /bin/bash --rcfile /mnt/.bashrc -ci "${DOCKER_CMD_VAR}"
+	   /bin/bash -ci "${DOCKER_CMD_VAR}"
 fi
 

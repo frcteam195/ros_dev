@@ -1,5 +1,4 @@
 FROM ubuntu:18.04
-ARG NOW
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
@@ -30,8 +29,6 @@ RUN apt-get install -y extra-cmake-modules
 
 RUN mkdir /mnt/working
 WORKDIR /mnt/working
-
-RUN printf "\nsource /opt/ros/melodic/setup.bash\n" >> /mnt/.bashrc
 
 RUN apt-get -y install libboost-all-dev
 RUN apt-get -y install python-pip
@@ -67,17 +64,17 @@ WORKDIR /tmp
 RUN rm -Rf ck_jetson_run_tar
 
 RUN apt-get install -y bash-completion
+RUN apt-get install -y nano parallel libsdl2-dev
 
 ARG NOW
 RUN git clone https://github.com/frcteam195/container_support_files
-RUN cat container_support_files/bashrc_additions.txt >> /root/.bashrc
-RUN printf "umask 002\n" >> /root/.bashrc
-RUN printf "source /opt/ros/melodic/setup.bash\n" >> /root/.bashrc
-RUN cp /root/.bashrc /mnt/.bashrc
-RUN cp /root/.profile /mnt/.profile
+RUN cat container_support_files/bash.bashrc > /etc/bash.bashrc
+RUN rm -Rf /root/.bashrc
+RUN rm -Rf /root/.profile
 RUN cp -r /root/.ros /mnt/.ros
 RUN cp -r /root/.cache /mnt/.cache
-RUN apt-get install -y nano parallel libsdl2-dev
+RUN ln -s /jetsonfs/lib/aarch64-linux-gnu/ /lib/aarch64-linux-gnu
 WORKDIR /mnt/working
 
 RUN rm -Rf /tmp/*
+
