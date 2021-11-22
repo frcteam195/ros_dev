@@ -18,11 +18,45 @@ fi
 exit_if_macOS
 exit_if_docker
 
+DETACHED_MODE=
+DOCKER_CMD_VAR=
 DOCKER_RUNNING_CMD=1
-if [ ! -z "${1}" ];
+
+CONTAINER_ID=`docker ps -aq --filter "ancestor=guitar24t/ck-ros:latest" --filter "status=running"`
+
+usage() { infomsg "Usage: $0 [-d] [-k] [-h] [-c <string>]\n\t-d Run docker container in detached mode\n\t-k Kill running docker instance\n\t-c <string> Run a command in the docker container\n\t-h Display this help text \n\n" 1>&2; exit 1; }
+while getopts "dkhc:" o; do
+    case "${o}" in
+        d)
+			DETACHED_MODE=-d
+            ;;
+		k)
+			if [ ! -z "${CONTAINER_ID}" ] 
+			then
+				infomsg "Stopping container..."
+				docker stop ${CONTAINER_ID}
+				infomsg "Exiting..."
+				exit 0;
+			fi
+			errmsg "No docker container found to kill!" noexit
+			usage
+			;;
+        c)
+            DOCKER_RUNNING_CMD=0
+			DOCKER_CMD_VAR="${OPTARG}"
+            ;;
+        h | *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+if [ ! -z "${CONTAINER_ID}" ] 
 then
-	DOCKER_CMD_VAR="${1}"
-	DOCKER_RUNNING_CMD=0
+    infomsg "Docker container is already running! We will launch a new terminal to it instead..."
+	docker exec -it $CONTAINER_ID /bin/bash
+	exit 0;
 fi
 
 if ! command -v docker &> /dev/null
@@ -81,9 +115,15 @@ touch "$(pwd)/.parallel/will-cite"
 docker pull guitar24t/ck-ros:latest || true
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
 then
-	#clear terminal without destroying scrollback buffer
-	printf "\033[2J\033[0;0H"
-	docker run -it --rm \
+	if [ ! -z "${DETACHED_MODE}" ];
+	then
+		infomsg "Launching a detached container of this docker instance:"
+	else
+		#clear terminal without destroying scrollback buffer
+		printf "\033[2J\033[0;0H"
+	fi
+
+	docker run -it ${DETACHED_MODE} --rm \
 	   -e DISPLAY=$DISPLAY_CMD \
 	   $OS_SPECIFIC_FLAGS \
 	   -e XAUTHORITY=$XAUTH \
@@ -119,4 +159,3 @@ else
 	   guitar24t/ck-ros:latest \
 	   /bin/bash -ci "${DOCKER_CMD_VAR}"
 fi
-
