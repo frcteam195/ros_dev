@@ -55,6 +55,7 @@ shift $((OPTIND-1))
 if [ ! -z "${CONTAINER_ID}" ] 
 then
     infomsg "Docker container is already running! We will launch a new terminal to it instead..."
+    infomsg "You can stop this container using ${0} -k"
 	docker exec -it $CONTAINER_ID /bin/bash
 	exit 0;
 fi
