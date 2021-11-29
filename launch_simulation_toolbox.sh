@@ -20,16 +20,20 @@ exit_if_docker
 
 DETACHED_MODE=
 DOCKER_CMD_VAR=
+FORCED_LAUNCH=
 DOCKER_RUNNING_CMD=1
 
 CONTAINER_ID=`docker ps -aq --filter "ancestor=guitar24t/ck-ros:latest" --filter "status=running"`
 
 usage() { infomsg "Usage: $0 [-d] [-k] [-h] [-c <string>]\n\t-d Run docker container in detached mode\n\t-k Kill running docker instance\n\t-c <string> Run a command in the docker container\n\t-h Display this help text \n\n" 1>&2; exit 1; }
-while getopts "dkhc:" o; do
+while getopts "fdkhc:" o; do
     case "${o}" in
         d)
 			DETACHED_MODE=-d
             ;;
+		f)
+			FORCED_LAUNCH=0
+			;;
 		k)
 			if [ ! -z "${CONTAINER_ID}" ] 
 			then
@@ -52,12 +56,15 @@ while getopts "dkhc:" o; do
 done
 shift $((OPTIND-1))
 
-if [ ! -z "${CONTAINER_ID}" ] 
+if [ ! -z "${CONTAINER_ID}" ] && [ -z "${FORCED_LAUNCH}" ]
 then
     infomsg "Docker container is already running! We will launch a new terminal to it instead..."
     infomsg "You can stop this container using ${0} -k"
 	docker exec -it $CONTAINER_ID /bin/bash
 	exit 0;
+elif [ ! -z "${CONTAINER_ID}" ] && [ ! -z "${FORCED_LAUNCH}" ]
+then
+	infomsg "A docker instance is already running, but you have chosen to force launch a new instance. Hope you know what you're doing..."
 fi
 
 if ! command -v docker &> /dev/null
