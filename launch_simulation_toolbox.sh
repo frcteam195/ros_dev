@@ -4,6 +4,27 @@
 BASEDIR=$(dirname "$0")
 source "${BASEDIR}/useful_scripts.sh"
 
+if [ ! -f "${BASEDIR}/../.bash_completion" ]; then
+	echo '#!/bin/bash' > "${BASEDIR}/../.bash_completion"
+	echo -e "\n" >> "${BASEDIR}/../.bash_completion"
+	cat "${BASEDIR}/bash_completion.sh" >> "${BASEDIR}/../.bash_completion"
+	echo -e "\n" >> "${BASEDIR}/../.bash_completion"
+	chmod +x "${BASEDIR}/../.bash_completion"
+	infomsg "Installed bash completions"
+else
+	NEW_COMPLETIONS=$(<"${BASEDIR}/bash_completion.sh")
+	CURR_COMPLETIONS=$(<"${BASEDIR}/../.bash_completion")
+	if [[ ${CURR_COMPLETIONS} = *"${NEW_COMPLETIONS}"* ]];
+	then
+		infomsg "Bash completions already installed"
+	else
+		echo -e "\n" >> "${BASEDIR}/../.bash_completion"
+		cat "${BASEDIR}/bash_completion.sh" >> "${BASEDIR}/../.bash_completion"
+		echo -e "\n" >> "${BASEDIR}/../.bash_completion"
+		infomsg "Bash completions installed to your already existing completion script"
+	fi
+fi
+
 if [[ $(pwd) == *"ros_dev"* ]]; then
   infomsg "This script cannot be run from this directory. Attempting to fix..."
   cd ..
