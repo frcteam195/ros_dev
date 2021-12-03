@@ -68,6 +68,7 @@ while getopts "fdkhc:" o; do
 			;;
         c)
             DOCKER_RUNNING_CMD=0
+			FORCED_LAUNCH=0
 			DOCKER_CMD_VAR="${OPTARG}"
             ;;
         h | *)
