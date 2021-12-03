@@ -41,6 +41,9 @@ WORKDIR /tmp/ck_jetson_run_tar
 RUN mkdir -p /jetsonfs
 RUN tar -xzvf ck_jetson_run_10x30x21.tar.gz --directory /jetsonfs
 
+
+ARG NOW
+RUN git pull
 RUN rm -Rf /jetsonfs/opt/ros/melodic/share
 RUN tar -xzvf share_patch_12x3x21.tar.gz --directory /jetsonfs/opt/ros/melodic
 RUN ln -s /jetsonfs/usr/lib/aarch64-linux-gnu/ /usr/lib/aarch64-linux-gnu
@@ -48,7 +51,6 @@ RUN ln -s /jetsonfs/usr/lib/aarch64-linux-gnu/ /usr/lib/aarch64-linux-gnu
 WORKDIR /tmp
 RUN rm -Rf ck_jetson_run_tar
 
-ARG NOW
 RUN git clone https://github.com/frcteam195/container_support_files
 RUN cat container_support_files/bash.bashrc > /etc/bash.bashrc
 RUN rm -Rf /root/.bashrc
