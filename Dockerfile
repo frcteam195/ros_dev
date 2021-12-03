@@ -42,7 +42,7 @@ RUN mkdir -p /jetsonfs
 RUN tar -xzvf ck_jetson_run_10x30x21.tar.gz --directory /jetsonfs
 
 RUN rm -Rf /jetsonfs/opt/ros/melodic/share
-RUN tar -xzvf share_patch_11x5x21.tar.gz --directory /jetsonfs/opt/ros/melodic
+RUN tar -xzvf share_patch_12x3x21.tar.gz --directory /jetsonfs/opt/ros/melodic
 RUN ln -s /jetsonfs/usr/lib/aarch64-linux-gnu/ /usr/lib/aarch64-linux-gnu
 
 WORKDIR /tmp
