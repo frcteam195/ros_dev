@@ -49,7 +49,7 @@ set(CMAKE_SIZE                      ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-si
 set(CMAKE_STRIP                     ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-strip${CMAKE_EXECUTABLE_SUFFIX} CACHE INTERNAL "")
 set(RT_LIBRARY                      ${JETSON_TOOLCHAIN_PATH}../aarch64-linux-gnu/libc/usr/lib/librt.so)
 
-set(CMAKE_C_FLAGS                   "-Wno-psabi -fdata-sections -ffunction-sections -Wl,--gc-sections -Wl,-rpath-link,/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/lib  -Wl,-rpath-link,/jetsonfs/usr/lib/aarch64-linux-gnu/  -Wl,-rpath-link,/jetsonfs/lib/aarch64-linux-gnu/" CACHE INTERNAL "")
+set(CMAKE_C_FLAGS                   "-Wno-psabi -fdata-sections -ffunction-sections -Wno-deprecated-declarations -Wl,--gc-sections -Wl,-rpath-link,/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/lib  -Wl,-rpath-link,/jetsonfs/usr/lib/aarch64-linux-gnu/  -Wl,-rpath-link,/jetsonfs/lib/aarch64-linux-gnu/" CACHE INTERNAL "")
 set(CMAKE_CXX_FLAGS                 "${CMAKE_C_FLAGS} -std=c++11 -Wno-write-strings" CACHE INTERNAL "")
 
 set(EXTRA_LIBRARY_PATHS             "-L")
