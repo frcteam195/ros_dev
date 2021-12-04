@@ -152,7 +152,7 @@ build ()
     infomsg "This command must be run in a docker container. Running in docker for you..."
 
     cd $SCRIPT_DIR/..
-    ./ros_dev/launch_simulation_toolbox.sh -c "/mnt/working/ros_dev/mkrobot.sh build"
+    ./ros_dev/run_container.sh -c "/mnt/working/ros_dev/mkrobot.sh build"
     return;
 	fi
   exit_if_not_docker

@@ -23,8 +23,6 @@ RUN rosdep update
 
 RUN pip install -U rosinstall vcstools rospkg
 
-RUN apt-get install -y libbullet-dev
-
 RUN mkdir -p /tmp/dummy
 WORKDIR /tmp/dummy
 RUN git init

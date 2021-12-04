@@ -28,5 +28,5 @@ FULL_ROSLIB_PATH="${BASE_PATH}/${ROSLIB_PATH}"
 cd ${FULL_ROSLIB_PATH}
 tar -czvf ${ROOT_DIR}/rosdeploy.tar.gz ./*_node
 cd  ${ROOT_DIR}
-scp rosdeploy.tar.gz  rhilton@10.1.95.5:/home/rhilton/repos/
-ssh rhilton@10.1.95.5 '/home/rhilton/unpackros.sh'
+scp rosdeploy.tar.gz  10.1.95.5:/home/roberthilton/repos/
+ssh 10.1.95.5 '/home/roberthilton/unpackros.sh'
