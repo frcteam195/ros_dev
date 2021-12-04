@@ -39,7 +39,7 @@ WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/ck_ros_tar.git
 WORKDIR /tmp/ck_ros_tar
 RUN mkdir -p /jetsonfs
-RUN tar -xzvf ck_ros_arm64_12x3x21.tar.gz --directory /jetsonfs
+RUN tar -xzvf ck_ros_arm64_12x04x2021.tar.gz --directory /jetsonfs
 
 ARG NOW
 RUN git pull
