@@ -10,7 +10,7 @@ RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" | tee 
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN apt-key list
 RUN apt-get update
-RUN apt-get install -y ros-melodic-desktop-full net-tools iputils-ping vim emacs git git-lfs extra-cmake-modules python-pip bash-completion nano parallel libsdl2-dev
+RUN apt-get install -y ros-melodic-desktop-full ros-melodic-libg2o libsdl-dev libsdl-image1.2-dev libsuitesparse-dev net-tools iputils-ping vim emacs git git-lfs extra-cmake-modules python-pip bash-completion nano parallel libsdl2-dev
 
 RUN echo 'root:robots' | chpasswd
 

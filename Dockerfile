@@ -39,8 +39,9 @@ WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/ck_jetson_run_tar.git
 WORKDIR /tmp/ck_jetson_run_tar
 RUN mkdir -p /jetsonfs
-RUN tar -xzvf ck_jetson_run_10x30x21.tar.gz --directory /jetsonfs
+RUN tar -xzvf ck_jetson_run_12x3x21.tar.gz --directory /jetsonfs
 
+RUN apt-get install -y libsdl-dev libsdl-image1.2-dev libsuitesparse-dev ros-melodic-libg2o
 
 ARG NOW
 RUN git pull
