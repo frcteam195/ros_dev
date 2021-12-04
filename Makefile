@@ -1,5 +1,8 @@
+currdatestr := $(shell date +%mx%dx%Y)
+currdate := $(shell date +%s)
+
 docker:
-	docker build -t guitar24t/ck-ros:amd64 --build-arg ARCH=amd64/ --build-arg NOW=$(date +%s) .
+	docker build -t guitar24t/ck-ros:amd64 --build-arg ARCH=amd64/ --build-arg NOW=$(currdate) .
 
 dockerpush:
 	docker push guitar24t/ck-ros:amd64
