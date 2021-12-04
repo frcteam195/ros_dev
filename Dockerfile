@@ -10,7 +10,7 @@ RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" | tee 
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN apt-key list
 RUN apt-get update
-RUN apt-get -y install ros-melodic-desktop-full
+RUN apt-get -y install ros-melodic-desktop-full libsdl-dev libsdl-image1.2-dev libsuitesparse-dev ros-melodic-libg2o
 
 RUN echo 'root:robots' | chpasswd
 
@@ -36,12 +36,10 @@ RUN git init
 RUN git lfs install
 
 WORKDIR /tmp
-RUN git clone https://github.com/frcteam195/ck_jetson_run_tar.git
-WORKDIR /tmp/ck_jetson_run_tar
+RUN git clone https://github.com/frcteam195/ck_ros_tar.git
+WORKDIR /tmp/ck_ros_tar
 RUN mkdir -p /jetsonfs
 RUN tar -xzvf ck_ros_arm64_12x3x21.tar.gz --directory /jetsonfs
-
-RUN apt-get install -y libsdl-dev libsdl-image1.2-dev libsuitesparse-dev ros-melodic-libg2o
 
 ARG NOW
 RUN git pull
@@ -50,7 +48,7 @@ RUN tar -xzvf share_patch_12x3x21.tar.gz --directory /jetsonfs/opt/ros/melodic
 RUN ln -s /jetsonfs/usr/lib/aarch64-linux-gnu/ /usr/lib/aarch64-linux-gnu
 
 WORKDIR /tmp
-RUN rm -Rf ck_jetson_run_tar
+RUN rm -Rf ck_ros_tar
 
 RUN git clone https://github.com/frcteam195/container_support_files
 RUN cat container_support_files/bash.bashrc > /etc/bash.bashrc
