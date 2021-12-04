@@ -3,3 +3,4 @@
 .dbus
 .DS_Store
 .gitconfig
+*.tar.gz

@@ -3,3 +3,8 @@ docker:
 
 dockerpush:
 	docker push guitar24t/ck-ros:arm64
+
+dockertarball:
+	docker save guitar24t/ck-ros:arm64 | gzip > "ck_ros_arm64_$(date +%mx%dx%Y).tar.gz"
+
+
