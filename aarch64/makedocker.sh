@@ -25,17 +25,6 @@ build ()
   docker build -t guitar24t/ck-ros:arm64 --build-arg ARCH=arm64/ --build-arg NOW=${currdate} .
 }
 
-help_text () 
-{
-  echo "Error: wrong number of arguments"
-  exit 1;
-}
-
-if [ $# -eq 0 ]
-then
-  help_text
-fi
-
 case "$1" in
   "push")
     push
