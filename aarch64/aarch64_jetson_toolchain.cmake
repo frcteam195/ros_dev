@@ -22,6 +22,7 @@ set(CMAKE_FIND_USE_CMAKE_SYSTEM_PATH FALSE)
 list(APPEND CMAKE_PREFIX_PATH "/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/")
 list(APPEND CMAKE_PREFIX_PATH "/jetsonfs/opt/ros/melodic/")
 list(APPEND CMAKE_PREFIX_PATH "/jetsonfs/lib/aarch64-linux-gnu/")
+list(APPEND CMAKE_PREFIX_PATH "/jetsonfs/jetsontoolchain/aarch64-linux-gnu/include/c++/7.3.1/")
 list(APPEND CMAKE_LIBRARY_PATH "/jetsonfs/usr/lib/aarch64-linux-gnu/")
 list(APPEND CMAKE_LIBRARY_PATH "/jetsonfs/opt/ros/melodic/lib/")
 list(APPEND CMAKE_LIBRARY_PATH "/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/lib")
@@ -37,6 +38,10 @@ link_directories("/jetsonfs/opt/ros/melodic/")
 # link_directories("/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/usr/lib")
 
 set(BOOST_INCLUDEDIR                "/jetsonfs/usr/include")
+set(BULLET_INCLUDE_DIR              "/jetsonfs/usr/include/bullet")
+set(SDL_INCLUDE_DIR                 "/jetsonfs/usr/include")
+set(SDL_IMAGE_INCLUDE_DIR           "/jetsonfs/usr/include")
+set(PYTHON_INCLUDE_DIR              "/jetsonfs/usr/include/python3.6m")
 set(_CMAKE_TOOLCHAIN_PREFIX         ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-gcc-${CMAKE_EXECUTABLE_SUFFIX})
 set(CMAKE_AR                        ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-gcc-ar${CMAKE_EXECUTABLE_SUFFIX} CACHE FILEPATH "Archiver")
 set(CMAKE_ASM_COMPILER              ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-gcc${CMAKE_EXECUTABLE_SUFFIX})
@@ -49,8 +54,8 @@ set(CMAKE_SIZE                      ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-si
 set(CMAKE_STRIP                     ${JETSON_TOOLCHAIN_PATH}aarch64-linux-gnu-strip${CMAKE_EXECUTABLE_SUFFIX} CACHE INTERNAL "")
 set(RT_LIBRARY                      ${JETSON_TOOLCHAIN_PATH}../aarch64-linux-gnu/libc/usr/lib/librt.so)
 
-set(CMAKE_C_FLAGS                   "-Wno-psabi -fdata-sections -ffunction-sections -Wno-deprecated-declarations -Wl,--gc-sections -Wl,-rpath-link,/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/lib  -Wl,-rpath-link,/jetsonfs/usr/lib/aarch64-linux-gnu/  -Wl,-rpath-link,/jetsonfs/lib/aarch64-linux-gnu/" CACHE INTERNAL "")
-set(CMAKE_CXX_FLAGS                 "${CMAKE_C_FLAGS} -std=c++11 -Wno-write-strings" CACHE INTERNAL "")
+set(CMAKE_C_FLAGS                   "-std=gnu++11 -Wno-psabi -fdata-sections -ffunction-sections -Wno-deprecated-declarations -Wl,--gc-sections -Wl,-rpath-link,/jetsonfs/jetsontoolchain/aarch64-linux-gnu/libc/lib  -Wl,-rpath-link,/jetsonfs/usr/lib/aarch64-linux-gnu/  -Wl,-rpath-link,/jetsonfs/lib/aarch64-linux-gnu/" CACHE INTERNAL "")
+set(CMAKE_CXX_FLAGS                 "${CMAKE_C_FLAGS} -I/jetsontoolchain/aarch64-linux-gnu/include/c++/7.3.1/ -std=c++11 -Wno-write-strings" CACHE INTERNAL "")
 
 set(EXTRA_LIBRARY_PATHS             "-L")
 
@@ -60,6 +65,8 @@ set(CMAKE_CXX_FLAGS_DEBUG           "${CMAKE_C_FLAGS_DEBUG}" CACHE INTERNAL "")
 set(CMAKE_CXX_FLAGS_RELEASE         "${CMAKE_C_FLAGS_RELEASE}" CACHE INTERNAL "")
 
 set(CMAKE_LIBRARY_ARCHITECTURE      "aarch64-linux-gnu")
+set(ENABLE_PRECOMPILED_HEADERS      "OFF")
+set(CMAKE_NO_SYSTEM_FROM_IMPORTED   "ON")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
