@@ -35,6 +35,8 @@ WORKDIR /tmp/dummy
 RUN git init
 RUN git lfs install
 
+ARG NOW
+
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/ck_ros_tar.git
 WORKDIR /tmp/ck_ros_tar
