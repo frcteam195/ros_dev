@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CATKIN_WS=$(cd $SCRIPT_DIR && cd .. && cd *_Robot && cd catkin_ws && pwd)
 OS_ARCHITECTURE=$(arch)
 OS_NAME=$(uname -a)
 source "${SCRIPT_DIR}/useful_scripts.sh"
@@ -250,6 +251,35 @@ build ()
   
 }
 
+mkrobot_test ()
+{
+  exit_if_not_docker
+
+  shift
+
+  if [ $# -eq 0 ]
+  then
+    errmsg "You must specify at least one node to test:\n\tmkrobot.sh test rio_control_node legacy_logstreamer_node"
+  fi
+
+  cd ${CATKIN_WS}
+  BASE_COMMAND="catkin_make"
+  BASE_TEST_ARG="run_tests_"
+  FULL_ARGS="${BASE_COMMAND}"
+  for node in "$@"
+  do
+    FULL_ARGS="${FULL_ARGS} ${BASE_TEST_ARG}${node}"
+  done
+  roscore &
+  ROSCORE_ID=$!
+  sleep 2
+  echo "Running command: ${FULL_ARGS}"
+  ${FULL_ARGS}
+  pkill roscore
+  wait ${ROSCORE_ID}
+}
+
+
 if [ $# -eq 0 ]
 then
   help_text
@@ -282,6 +312,9 @@ case "$1" in
     ;;
   "rebuildros")
     rebuildros
+    ;;
+  "test")
+    mkrobot_test "$@"
     ;;
   "update")
     update
