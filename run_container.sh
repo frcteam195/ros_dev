@@ -153,8 +153,8 @@ cp ~/.gitconfig $(pwd)
 mkdir -p "$(pwd)/.parallel"
 touch "$(pwd)/.parallel/will-cite"
 
-mkdir -p "${BASEDIR}/.${USER}"
-cp -r "${HOME}/.ssh" "${BASEDIR}/.${USER}/"
+mkdir -p "${BASEDIR}/../.${USER}"
+cp -r "${HOME}/.ssh" "${BASEDIR}/../.${USER}/"
 
 docker pull guitar24t/ck-ros:latest || true
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
@@ -176,7 +176,7 @@ then
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v $(pwd):/mnt/working \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-v "$(realpath ${BASEDIR}/.${USER}/)":"/home/$USER/" \
+		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
 		-v $XAUTH:$XAUTH \
 		--user $UID:$GID \
 		--volume="/etc/group:/etc/group:ro" \
@@ -196,7 +196,7 @@ else
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v $(pwd):/mnt/working \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-v "$(realpath ${BASEDIR}/.${USER}/)":"/home/$USER/" \
+		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
 		-v $XAUTH:$XAUTH \
 		--user $UID:$GID \
 		--volume="/etc/group:/etc/group:ro" \
