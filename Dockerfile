@@ -35,13 +35,41 @@ WORKDIR /tmp/sobjectizer
 RUN git checkout 972b5310b7a486dd4d4322ffb46f1c7e15c47ef6
 RUN mkdir cmake_build
 WORKDIR /tmp/sobjectizer/cmake_build
-RUN cmake -DCMAKE_INSTALL_PREFIX=target -DCMAKE_BUILD_TYPE=Release ../dev
+RUN cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release ../dev
 RUN cmake --build . --config Release
 RUN cmake --build . --config Release --target install
+
 WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/CKROSlibzmq.git
+WORKDIR /tmp/CKROSlibzmq
+RUN git checkout 4097855ddaaa65ed7b5e8cb86d143842a594eebd
+RUN mkdir cppbuild
+WORKDIR /tmp/CKROSlibzmq/cppbuild
+RUN cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+RUN make -j8
+RUN make install
 
+WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/CKROSprotobuf.git
+WORKDIR /tmp/CKROSprotobuf
+RUN git checkout 89b14b1d16eba4d44af43256fc45b24a6a348557
+RUN mkdir cppbuild
+WORKDIR /tmp/CKROSprotobuf/cppbuild
+RUN cmake ../cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+RUN make -j8
+RUN make install
 
-RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libfmt-dev libgeographic-dev libgtest-dev
+WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/CKROSfmt.git
+WORKDIR /tmp/CKROSfmt
+RUN git checkout d141cdbeb0fb422a3fb7173b285fd38e0d1772dc
+RUN mkdir cppbuild
+WORKDIR /tmp/CKROSfmt/cppbuild
+RUN cmake ..
+RUN make
+RUN make install
+
+RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev
 
 
 ARG NOW
