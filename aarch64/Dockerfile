@@ -10,7 +10,7 @@ RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" | tee 
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN apt-key list
 RUN apt-get update
-RUN apt-get install -y ros-melodic-desktop-full ros-melodic-libg2o libsdl-dev libsdl-image1.2-dev libsuitesparse-dev net-tools iputils-ping vim emacs git git-lfs extra-cmake-modules python-pip bash-completion nano parallel libsdl2-dev
+RUN apt-get install -y ros-melodic-desktop-full ros-melodic-libg2o libsdl-dev libsdl-image1.2-dev libsuitesparse-dev net-tools iputils-ping vim emacs git git-lfs extra-cmake-modules python-pip bash-completion nano parallel
 
 RUN echo 'root:robots' | chpasswd
 
@@ -69,7 +69,29 @@ RUN cmake ..
 RUN make
 RUN make install
 
-RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev
+WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/CKROSSDL.git
+WORKDIR /tmp/CKROSSDL
+RUN git checkout 2e9821423a237a1206e3c09020778faacfe430be
+RUN ./configure
+RUN make -j8
+RUN make install
+
+RUN apt-get install -y libglfw3 libglfw3-dev
+
+WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/CKimgui.git
+WORKDIR /tmp/CKimgui
+RUN make
+RUN make install
+
+WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/CKimplot.git
+WORKDIR /tmp/CKimplot
+RUN make
+RUN make install
+
+RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3
 
 ARG NOW
 RUN git clone https://github.com/frcteam195/container_support_files
