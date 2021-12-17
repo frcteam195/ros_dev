@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROBOT_ROOT=$(cd $SCRIPT_DIR && cd .. && cd *_Robot && pwd)
 CATKIN_WS=$(cd $SCRIPT_DIR && cd .. && cd *_Robot && cd catkin_ws && pwd)
 OS_ARCHITECTURE=$(arch)
 OS_NAME=$(uname -a)
@@ -52,6 +53,32 @@ update()
 				sudo apt-get install -y parallel
 		fi
 		find . -name ".git" -type d -exec dirname {} \; | parallel "printf {} | git -C {} pull"
+}
+
+source_setup_bash()
+{
+	if [ -f "$CATKIN_WS/devel/setup.bash" ]
+	then
+		source ~/*_Robot/catkin_ws/devel/setup.bash
+		echo "Sourcing setup.bash"
+	else
+		echo "Can't source setup.bash"
+		echo "Is robot built properly?"
+	fi
+}
+
+launch()
+{
+	source_setup_bash
+	if [ $# -eq 0 ]
+	then
+		LAUNCH_FILE=$ROBOT_ROOT/launch/prod.launch
+	else
+		LAUNCH_FILE=$1
+	fi
+	echo "Using launchfile $LAUNCH_FILE"
+
+	roslaunch $LAUNCH_FILE
 }
 
 node()
@@ -302,6 +329,9 @@ case "$1" in
 		;;
 	"update")
 		update
+		;;
+	"launch")
+		launch $2
 		;;
 	*)
 		help_text
