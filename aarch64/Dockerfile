@@ -28,7 +28,19 @@ WORKDIR /tmp/dummy
 RUN git init
 RUN git lfs install
 
-WORKDIR /mnt/working
+WORKDIR /tmp
+RUN git clone https://github.com/stiffstream/sobjectizer
+WORKDIR /tmp/sobjectizer
+RUN git checkout 972b5310b7a486dd4d4322ffb46f1c7e15c47ef6
+RUN mkdir cmake_build
+WORKDIR /tmp/sobjectizer/cmake_build
+RUN cmake -DCMAKE_INSTALL_PREFIX=target -DCMAKE_BUILD_TYPE=Release ../dev
+RUN cmake --build . --config Release
+RUN cmake --build . --config Release --target install
+WORKDIR /tmp
+
+
+RUN apt-get install -y ros-melodic-teb-local-planner ros-melodic-robot-localization libfmt-dev libgeographic-dev libgtest-dev
 
 ARG NOW
 RUN git clone https://github.com/frcteam195/container_support_files
@@ -39,3 +51,5 @@ RUN cp -r /root/.ros /mnt/.ros
 RUN cp -r /root/.cache /mnt/.cache
 
 RUN rm -Rf /tmp/*
+
+WORKDIR /mnt/working
