@@ -37,23 +37,29 @@ if [[ $(pwd) == *"ros_dev"* ]]; then
 fi
 
 exit_if_macOS
-exit_if_docker
 
 DETACHED_MODE=
 DOCKER_CMD_VAR=
 FORCED_LAUNCH=
 DOCKER_RUNNING_CMD=1
+DOCKER_ARCH=latest
 
 CONTAINER_ID=`docker ps -aq --filter "ancestor=guitar24t/ck-ros:latest" --filter "status=running"`
 
-usage() { infomsg "Usage: $0 [-d] [-k] [-h] [-c <string>]\n\t-d Run docker container in detached mode\n\t-k Kill running docker instance\n\t-c <string> Run a command in the docker container\n\t-h Display this help text \n\n" 1>&2; exit 1; }
-while getopts "fdkhc:" o; do
+usage() { infomsg "Usage: $0 [-a] [-d] [-k] [-h] [-c <string>]\n\t-a Force arm64 docker container\n\t-i Force x86_64 docker container\n\t-d Run docker container in detached mode\n\t-k Kill running docker instance\n\t-c <string> Run a command in the docker container\n\t-h Display this help text \n\n" 1>&2; exit 1; }
+while getopts "ac:dfhik" o; do
     case "${o}" in
+		a)
+			DOCKER_ARCH=arm64
+			;;
         d)
 			DETACHED_MODE=-d
             ;;
 		f)
 			FORCED_LAUNCH=0
+			;;
+		i)	
+			DOCKER_ARCH=x86_64
 			;;
 		k)
 			if [ ! -z "${CONTAINER_ID}" ] 
@@ -77,6 +83,11 @@ while getopts "fdkhc:" o; do
     esac
 done
 shift $((OPTIND-1))
+
+if [ ${DOCKER_ARCH} == "latest" ] && [ ! -z ${FORCED_LAUNCH} ]
+then 
+	exit_if_docker
+fi
 
 if [ ! -z "${CONTAINER_ID}" ] && [ -z "${FORCED_LAUNCH}" ]
 then
@@ -154,38 +165,40 @@ then
 	fi
 
 	docker run -it ${DETACHED_MODE} --rm \
-	   -e DISPLAY=$DISPLAY_CMD \
-	   $OS_SPECIFIC_FLAGS \
-	   -e XAUTHORITY=$XAUTH \
-       	   -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
-	   -v $(pwd):/mnt/working \
-	   -v /tmp/.X11-unix:/tmp/.X11-unix \
-	   -v ~/.ssh:/home/$USER/.ssh \
-	   -v $XAUTH:$XAUTH \
-	   --user $UID:$GID \
-	   --volume="/etc/group:/etc/group:ro" \
-       --volume="/etc/passwd:/etc/passwd:ro" \
-       --volume="/etc/shadow:/etc/shadow:ro" \
-       --net=host \
-       -e HOME=/mnt/working \
-	   guitar24t/ck-ros:latest \
-	   /bin/bash
+		-e DISPLAY=$DISPLAY_CMD \
+		$OS_SPECIFIC_FLAGS \
+		-e XAUTHORITY=$XAUTH \
+    	-v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v $(pwd):/mnt/working \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		-v ~/.ssh:/home/$USER/.ssh \
+		-v $XAUTH:$XAUTH \
+		--user $UID:$GID \
+		--volume="/etc/group:/etc/group:ro" \
+    	--volume="/etc/passwd:/etc/passwd:ro" \
+    	--volume="/etc/shadow:/etc/shadow:ro" \
+    	--net=host \
+    	-e HOME=/mnt/working \
+		guitar24t/ck-ros:${DOCKER_ARCH} \
+		/bin/bash
 else
 	docker run -it --rm \
-	   -e DISPLAY=$DISPLAY_CMD \
-	   $OS_SPECIFIC_FLAGS \
-	   -e XAUTHORITY=$XAUTH \
-       	   -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
-	   -v $(pwd):/mnt/working \
-	   -v /tmp/.X11-unix:/tmp/.X11-unix \
-	   -v ~/.ssh:/home/$USER/.ssh \
-	   -v $XAUTH:$XAUTH \
-	   --user $UID:$GID \
-	   --volume="/etc/group:/etc/group:ro" \
-       --volume="/etc/passwd:/etc/passwd:ro" \
-       --volume="/etc/shadow:/etc/shadow:ro" \
-       --net=host \
-       -e HOME=/mnt/working \
-	   guitar24t/ck-ros:latest \
-	   /bin/bash -ci "${DOCKER_CMD_VAR}"
+		-e DISPLAY=$DISPLAY_CMD \
+		$OS_SPECIFIC_FLAGS \
+		-e XAUTHORITY=$XAUTH \
+    	-v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v $(pwd):/mnt/working \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		-v ~/.ssh:/home/$USER/.ssh \
+		-v $XAUTH:$XAUTH \
+		--user $UID:$GID \
+		--volume="/etc/group:/etc/group:ro" \
+    	--volume="/etc/passwd:/etc/passwd:ro" \
+    	--volume="/etc/shadow:/etc/shadow:ro" \
+    	--net=host \
+    	-e HOME=/mnt/working \
+		guitar24t/ck-ros:${DOCKER_ARCH} \
+		/bin/bash -ci "${DOCKER_CMD_VAR}"
 fi
