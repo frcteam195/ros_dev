@@ -92,10 +92,10 @@ RUN make
 RUN make install
 
 
-RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev
-
+RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3
 
 ARG NOW
+
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/container_support_files
 RUN cat container_support_files/bash.bashrc > /etc/bash.bashrc
