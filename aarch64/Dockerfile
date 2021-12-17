@@ -40,7 +40,7 @@ RUN cmake --build . --config Release --target install
 WORKDIR /tmp
 
 
-RUN apt-get install -y ros-melodic-teb-local-planner ros-melodic-robot-localization libfmt-dev libgeographic-dev libgtest-dev
+RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libfmt-dev libgeographic-dev libgtest-dev
 
 ARG NOW
 RUN git clone https://github.com/frcteam195/container_support_files
