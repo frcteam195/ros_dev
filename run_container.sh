@@ -167,6 +167,7 @@ then
 	docker run -it ${DETACHED_MODE} --rm \
 		-e DISPLAY=$DISPLAY_CMD \
 		$OS_SPECIFIC_FLAGS \
+		-e USER=$USER \
 		-e XAUTHORITY=$XAUTH \
     	-v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
 		-v /var/run/docker.sock:/var/run/docker.sock \
@@ -186,6 +187,7 @@ else
 	docker run -it --rm \
 		-e DISPLAY=$DISPLAY_CMD \
 		$OS_SPECIFIC_FLAGS \
+		-e USER=$USER \
 		-e XAUTHORITY=$XAUTH \
     	-v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
 		-v /var/run/docker.sock:/var/run/docker.sock \
