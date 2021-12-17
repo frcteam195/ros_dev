@@ -153,6 +153,9 @@ cp ~/.gitconfig $(pwd)
 mkdir -p "$(pwd)/.parallel"
 touch "$(pwd)/.parallel/will-cite"
 
+mkdir -p "${BASEDIR}/../.${USER}"
+cp -r "${HOME}/.ssh" "${BASEDIR}/../.${USER}/"
+
 docker pull guitar24t/ck-ros:latest || true
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
 then
@@ -167,12 +170,13 @@ then
 	docker run -it ${DETACHED_MODE} --rm \
 		-e DISPLAY=$DISPLAY_CMD \
 		$OS_SPECIFIC_FLAGS \
+		-e USER=$USER \
 		-e XAUTHORITY=$XAUTH \
     	-v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v $(pwd):/mnt/working \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-v ~/.ssh:/home/$USER/.ssh \
+		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
 		-v $XAUTH:$XAUTH \
 		--user $UID:$GID \
 		--volume="/etc/group:/etc/group:ro" \
@@ -186,12 +190,13 @@ else
 	docker run -it --rm \
 		-e DISPLAY=$DISPLAY_CMD \
 		$OS_SPECIFIC_FLAGS \
+		-e USER=$USER \
 		-e XAUTHORITY=$XAUTH \
     	-v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v $(pwd):/mnt/working \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-v ~/.ssh:/home/$USER/.ssh \
+		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
 		-v $XAUTH:$XAUTH \
 		--user $UID:$GID \
 		--volume="/etc/group:/etc/group:ro" \

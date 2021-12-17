@@ -3,7 +3,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs git git-lfs extra-cmake-modules libboost-all-dev python-pip bash-completion nano parallel libsdl2-dev
+RUN apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs git git-lfs extra-cmake-modules libboost-all-dev python-pip bash-completion nano parallel
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/ros-latest.list
@@ -66,8 +66,31 @@ RUN git checkout d141cdbeb0fb422a3fb7173b285fd38e0d1772dc
 RUN mkdir cppbuild
 WORKDIR /tmp/CKROSfmt/cppbuild
 RUN cmake ..
+RUN make -j8
+RUN make install
+
+WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/CKROSSDL.git
+WORKDIR /tmp/CKROSSDL
+RUN git checkout 2e9821423a237a1206e3c09020778faacfe430be
+RUN ./configure
+RUN make -j8
+RUN make install
+
+RUN apt-get install -y libglfw3 libglfw3-dev
+
+WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/CKimgui.git
+WORKDIR /tmp/CKimgui
 RUN make
 RUN make install
+
+WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/CKimplot.git
+WORKDIR /tmp/CKimplot
+RUN make    
+RUN make install
+
 
 RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev
 
