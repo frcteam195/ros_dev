@@ -176,19 +176,12 @@ clone ()
 
 build ()
 {
-	if [ ! -f /.dockerenv ]; then
-		infomsg "This command must be run in a docker container. Running in docker for you..."
-
-		cd $SCRIPT_DIR/..
-		./ros_dev/run_container.sh -c "/mnt/working/ros_dev/mkrobot.sh build ${BUILD_ARCHITECTURE}"
-		return;
-	fi
-	exit_if_not_docker
-
 	if [ $OS_ARCHITECTURE == 'arm64' ]
 	then
 		OS_ARCHITECTURE="aarch64"
 	fi
+
+	docker run --rm --privileged multiarch/qemu-user-static --reset -p yes > /dev/null
 
 	if [ $# -eq 0 ]
 	then
@@ -223,8 +216,29 @@ build ()
 	find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} ln -s {}/outputs/$BUILD_ARCHITECTURE/build {}/catkin_ws/build
 	find . | grep _Robot$ | xargs -I {} realpath {} | xargs -I {} ln -s {}/outputs/$BUILD_ARCHITECTURE/devel {}/catkin_ws/devel
 
+
+	DOCKER_FLAGS=
+	case "${BUILD_ARCHITECTURE}" in
+		"x86_64")
+			DOCKER_FLAGS="-i"
+			;;
+		"aarch64")
+			DOCKER_FLAGS="-a"
+			;;
+		*)
+			;;
+	esac
+
 	if [ ${OS_ARCHITECTURE} = ${BUILD_ARCHITECTURE} ]
 	then
+		if [ ! -f /.dockerenv ]; then
+			infomsg "This command must be run in a docker container. Running in docker for you..."
+
+			cd $SCRIPT_DIR/..
+			./ros_dev/run_container.sh ${DOCKER_FLAGS} -f -c "/mnt/working/ros_dev/mkrobot.sh build ${BUILD_ARCHITECTURE}"
+			return;
+		fi
+		exit_if_not_docker
 		if [ -d "./third_party_libs" ]
 		then
 			infomsg "Making third party libraries..."
@@ -243,18 +257,6 @@ build ()
 		catkin_make -DROBOT_ARCHITECTURE_${OS_ARCHITECTURE^^}=TRUE
 	elif [ ${OS_ARCHITECTURE} != ${BUILD_ARCHITECTURE} ]
 	then
-		DOCKER_FLAGS=
-		case "${BUILD_ARCHITECTURE}" in
-			"x86_64")
-				DOCKER_FLAGS="-i"
-				;;
-			"aarch64")
-				DOCKER_FLAGS="-a"
-				;;
-			*)
-				;;
-		esac
-
 		./ros_dev/run_container.sh ${DOCKER_FLAGS} -f -c "/mnt/working/ros_dev/mkrobot.sh build ${BUILD_ARCHITECTURE}"
 	else
 		errmsg "Build case not identified!"

@@ -51,6 +51,7 @@ while getopts "ac:dfhik" o; do
     case "${o}" in
 		a)
 			DOCKER_ARCH=arm64
+			docker pull guitar24t/ck-ros:arm64 || true
 			;;
         d)
 			DETACHED_MODE=-d
@@ -59,7 +60,8 @@ while getopts "ac:dfhik" o; do
 			FORCED_LAUNCH=0
 			;;
 		i)	
-			DOCKER_ARCH=x86_64
+			DOCKER_ARCH=amd64
+			docker pull guitar24t/ck-ros:amd64 || true
 			;;
 		k)
 			if [ ! -z "${CONTAINER_ID}" ] 
