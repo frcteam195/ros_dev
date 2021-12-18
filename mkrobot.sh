@@ -181,7 +181,8 @@ build ()
 		OS_ARCHITECTURE="aarch64"
 	fi
 
-	if [ ! -f /.dockerenv ]; then
+	if [ ! $OS_ARCHITECTURE == 'aarch64' ]
+	then
 		docker run --rm --privileged multiarch/qemu-user-static --reset -p yes > /dev/null
 	fi
 
@@ -190,6 +191,12 @@ build ()
 		BUILD_ARCHITECTURE="${OS_ARCHITECTURE}"
 	else
 		BUILD_ARCHITECTURE=$1
+	fi
+
+	if [ $OS_ARCHITECTURE != $BUILD_ARCHITECTURE ] && [ -f /.dockerenv ]
+	then
+		errmsg "A cross compile must be run directly from the host and not inside a container."
+		exit
 	fi
 
 	case "$BUILD_ARCHITECTURE" in

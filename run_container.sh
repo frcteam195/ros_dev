@@ -158,6 +158,9 @@ touch "$(pwd)/.parallel/will-cite"
 mkdir -p "${BASEDIR}/../.${USER}"
 cp -r "${HOME}/.ssh" "${BASEDIR}/../.${USER}/"
 
+GID=$(id -g)
+DOCKER_GID=$(cut -d: -f3 < <(getent group docker))
+
 docker pull guitar24t/ck-ros:latest || true
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
 then
@@ -181,7 +184,9 @@ then
 		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
 		-v $XAUTH:$XAUTH \
 		--user $UID:$GID \
+		--group-add ${DOCKER_GID} \
 		--volume="/etc/group:/etc/group:ro" \
+		--volume="/etc/gshadow:/etc/gshadow:ro" \
     	--volume="/etc/passwd:/etc/passwd:ro" \
     	--volume="/etc/shadow:/etc/shadow:ro" \
     	--net=host \
@@ -201,7 +206,9 @@ else
 		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
 		-v $XAUTH:$XAUTH \
 		--user $UID:$GID \
+		--group-add ${DOCKER_GID} \
 		--volume="/etc/group:/etc/group:ro" \
+		--volume="/etc/gshadow:/etc/gshadow:ro" \
     	--volume="/etc/passwd:/etc/passwd:ro" \
     	--volume="/etc/shadow:/etc/shadow:ro" \
     	--net=host \
