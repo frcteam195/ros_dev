@@ -181,7 +181,9 @@ build ()
 		OS_ARCHITECTURE="aarch64"
 	fi
 
-	docker run --rm --privileged multiarch/qemu-user-static --reset -p yes > /dev/null
+	if [ ! -f /.dockerenv ]; then
+		docker run --rm --privileged multiarch/qemu-user-static --reset -p yes > /dev/null
+	fi
 
 	if [ $# -eq 0 ]
 	then
