@@ -159,7 +159,7 @@ mkdir -p "${BASEDIR}/../.${USER}"
 cp -r "${HOME}/.ssh" "${BASEDIR}/../.${USER}/"
 
 GID=$(id -g)
-DOCKER_GID=$(cut -d: -f3 < <(getent group docker))
+#DOCKER_GID=$(cut -d: -f3 < <(getent group docker))
 
 docker pull guitar24t/ck-ros:latest || true
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
@@ -184,7 +184,6 @@ then
 		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
 		-v $XAUTH:$XAUTH \
 		--user $UID:$GID \
-		--group-add ${DOCKER_GID} \
 		--volume="/etc/group:/etc/group:ro" \
 		--volume="/etc/gshadow:/etc/gshadow:ro" \
     	--volume="/etc/passwd:/etc/passwd:ro" \
@@ -193,6 +192,10 @@ then
     	-e HOME=/mnt/working \
 		guitar24t/ck-ros:${DOCKER_ARCH} \
 		/bin/bash
+
+
+		#--group-add ${DOCKER_GID} \
+
 else
 	docker run -it --rm \
 		-e DISPLAY=$DISPLAY_CMD \
@@ -206,7 +209,6 @@ else
 		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
 		-v $XAUTH:$XAUTH \
 		--user $UID:$GID \
-		--group-add ${DOCKER_GID} \
 		--volume="/etc/group:/etc/group:ro" \
 		--volume="/etc/gshadow:/etc/gshadow:ro" \
     	--volume="/etc/passwd:/etc/passwd:ro" \
@@ -215,4 +217,7 @@ else
     	-e HOME=/mnt/working \
 		guitar24t/ck-ros:${DOCKER_ARCH} \
 		/bin/bash -ci "${DOCKER_CMD_VAR}"
+
+		#--group-add ${DOCKER_GID} \
+
 fi
