@@ -263,7 +263,7 @@ build ()
 		find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
 		find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep ".*_node" | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
 		cd ..
-		catkin_make -DROBOT_ARCHITECTURE_${OS_ARCHITECTURE^^}=TRUE
+		catkin_make -DROBOT_ARCHITECTURE_${OS_ARCHITECTURE^^}=TRUE -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra"
 	elif [ ${OS_ARCHITECTURE} != ${BUILD_ARCHITECTURE} ]
 	then
 		./ros_dev/run_container.sh ${DOCKER_FLAGS} -f -c "/mnt/working/ros_dev/mkrobot.sh build ${BUILD_ARCHITECTURE}"
