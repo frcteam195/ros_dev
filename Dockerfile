@@ -79,6 +79,8 @@ RUN make install
 
 RUN apt-get install -y libglfw3 libglfw3-dev
 
+ARG NOW
+
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/CKimgui.git
 WORKDIR /tmp/CKimgui
@@ -92,7 +94,7 @@ RUN make
 RUN make install
 
 
-RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3
+RUN apt-get install -y ros-melodic-common-msgs ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy
 
 ARG NOW
 
