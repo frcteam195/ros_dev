@@ -72,13 +72,23 @@ launch()
 	source_setup_bash
 	if [ $# -eq 0 ]
 	then
-		LAUNCH_FILE=$ROBOT_ROOT/launch/prod.launch
+		LAUNCH_FILE="${ROBOT_ROOT}/launch/prod.launch"
 	else
-		LAUNCH_FILE=$1
-	fi
-	echo "Using launchfile $LAUNCH_FILE"
+		if [[ ${1} == *.launch ]]
+		then
+			LAUNCH_FILE="${1}"
+		else
+			LAUNCH_FILE="${1}.launch"
+		fi
 
-	roslaunch $LAUNCH_FILE
+		if [[ ${1} != */* ]]
+		then
+			LAUNCH_FILE="${ROBOT_ROOT}/launch/${LAUNCH_FILE}"
+		fi
+	fi
+	echo "Using launchfile ${LAUNCH_FILE}"
+
+	roslaunch "${LAUNCH_FILE}"
 }
 
 node()
