@@ -1,5 +1,12 @@
 #!/bin/bash
 
+TARGET_IP=10.1.95.4
+
+	if [ ! $# -eq 0 ]
+	then
+        TARGET_IP=${1}
+	fi
+
 BASEDIR=$(dirname "$0")
 ROOT_DIR=$(realpath $(dirname ${BASEDIR}))
 source "${BASEDIR}/useful_scripts.sh"
@@ -16,17 +23,18 @@ if [[ $(pwd) == *"ros_dev"* ]]; then
     fi
 fi
 
-ROSLIB_PATH="outputs/aarch64/devel/lib"
-if [ $OS_ARCHITECTURE == 'aarch64' ] || [ $OS_ARCHITECTURE == 'arm64' ]
-then
-    ROSLIB_PATH="outputs/native/devel/lib"
-fi
+#ROSLIB_PATH="outputs/aarch64/devel/lib"
+#if [ $OS_ARCHITECTURE == 'aarch64' ] || [ $OS_ARCHITECTURE == 'arm64' ]
+#then
+#    ROSLIB_PATH="outputs/native/devel/lib"
+#fi
 
-BASE_PATH=$(dirname $(find . -maxdepth 2 -type d -name '*catkin_ws*' -print -quit | xargs realpath -P))
-
-FULL_ROSLIB_PATH="${BASE_PATH}/${ROSLIB_PATH}"
-cd ${FULL_ROSLIB_PATH}
-tar -czvf ${ROOT_DIR}/rosdeploy.tar.gz ./*_node
+BASE_PATH=$(find . -maxdepth 1 -type d -name '*_Robot*' -print -quit | xargs realpath -P)
+echo ${BASE_PATH}
+#FULL_ROSLIB_PATH="${BASE_PATH}/${ROSLIB_PATH}"
+#cd ${FULL_ROSLIB_PATH}
+cd ${BASE_PATH}/..
+tar -hczvf ${ROOT_DIR}/rosdeploy.tar.gz *_Robot/*
 cd  ${ROOT_DIR}
-scp rosdeploy.tar.gz  10.1.95.5:/home/roberthilton/repos/
-ssh 10.1.95.5 '/home/roberthilton/unpackros.sh'
+scp rosdeploy.tar.gz  team195@${TARGET_IP}:/home/team195/repos/
+ssh team195@${TARGET_IP} '/home/team195/unpackros.sh'
