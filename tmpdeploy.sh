@@ -30,11 +30,14 @@ fi
 #fi
 
 BASE_PATH=$(find . -maxdepth 1 -type d -name '*_Robot*' -print -quit | xargs realpath -P)
-echo ${BASE_PATH}
 #FULL_ROSLIB_PATH="${BASE_PATH}/${ROSLIB_PATH}"
 #cd ${FULL_ROSLIB_PATH}
 cd ${BASE_PATH}/..
-tar -hczvf ${ROOT_DIR}/rosdeploy.tar.gz *_Robot/*
+echo "Packing robot..."
+tar -hczf ${ROOT_DIR}/rosdeploy.tar.gz *_Robot/*
 cd  ${ROOT_DIR}
-scp rosdeploy.tar.gz  team195@${TARGET_IP}:/home/team195/repos/
-ssh team195@${TARGET_IP} '/home/team195/unpackros.sh'
+echo "Deploying robot to target..."
+scp rosdeploy.tar.gz  team195@${TARGET_IP}:/robot
+echo "Unpacking robot on target..."
+ssh team195@${TARGET_IP} '/robot/robot_scripts/unpackros.sh'
+echo "Done!"
