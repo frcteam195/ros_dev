@@ -39,5 +39,5 @@ cd  ${ROOT_DIR}
 echo "Deploying robot to target..."
 scp rosdeploy.tar.gz  team195@${TARGET_IP}:/robot
 echo "Unpacking robot on target..."
-ssh team195@${TARGET_IP} '/robot/robot_scripts/unpackros.sh'
+ssh team195@${TARGET_IP} '/robot/ros_scripts/unpackros.sh'
 echo "Done!"
