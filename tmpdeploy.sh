@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_IP=10.1.95.4
+TARGET_IP=10.1.95.5
 
 	if [ ! $# -eq 0 ]
 	then
@@ -37,7 +37,7 @@ echo "Packing robot..."
 tar -hczf ${ROOT_DIR}/rosdeploy.tar.gz *_Robot/*
 cd  ${ROOT_DIR}
 echo "Deploying robot to target..."
-scp rosdeploy.tar.gz  team195@${TARGET_IP}:/robot
+scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no rosdeploy.tar.gz  team195@${TARGET_IP}:/robot
 echo "Unpacking robot on target..."
-ssh team195@${TARGET_IP} '/robot/ros_scripts/unpackros.sh'
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no team195@${TARGET_IP} '/robot/ros_scripts/unpackros.sh'
 echo "Done!"
