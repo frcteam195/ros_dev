@@ -158,6 +158,8 @@ touch "$(pwd)/.parallel/will-cite"
 mkdir -p "${BASEDIR}/../.${USER}"
 cp -r "${HOME}/.ssh" "${BASEDIR}/../.${USER}/"
 
+echo "${BASEDIR}/../.${USER}/"
+
 GID=$(id -g)
 #DOCKER_GID=$(cut -d: -f3 < <(getent group docker))
 
