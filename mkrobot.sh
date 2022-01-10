@@ -7,7 +7,7 @@ OS_ARCHITECTURE=$(arch)
 OS_NAME=$(uname -a)
 source "${SCRIPT_DIR}/useful_scripts.sh"
 
-help_text () 
+help_text ()
 {
 		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
 }
@@ -162,7 +162,7 @@ cleanros ()
 	cd catkin_ws/src
 	find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
 	find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -v ".*_Robot" | grep -v ^../../../third_party_libs$$
-	cd .. 
+	cd ..
 	catkin_make clean
 
 	rm -rf /mnt/working/*_Robot/outputs/*/build/*
@@ -271,7 +271,7 @@ build ()
 		mkdir -p catkin_ws/src
 		cd catkin_ws/src
 		find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
-		find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep ".*_node" | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
+		find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -e ".*_node" -e ".*_planner" | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
 		cd ..
 		catkin_make -DROBOT_ARCHITECTURE_${OS_ARCHITECTURE^^}=TRUE -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra"
 	elif [ ${OS_ARCHITECTURE} != ${BUILD_ARCHITECTURE} ]
@@ -280,7 +280,7 @@ build ()
 	else
 		errmsg "Build case not identified!"
 	fi
-	
+
 }
 
 mkrobot_test ()
