@@ -295,6 +295,7 @@ mkrobot_test ()
 	fi
 
 	cd ${CATKIN_WS}
+	catkin_make -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra" -DCATKIN_ENABLE_TESTING=1
 	BASE_COMMAND="catkin_make"
 	BASE_TEST_ARG="run_tests_"
 	FULL_ARGS="${BASE_COMMAND}"
