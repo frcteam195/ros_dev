@@ -273,7 +273,7 @@ build ()
 		find . -maxdepth 1 | grep -v ^.$ | grep -v ^./CMakeLists.txt$ | xargs -I {} rm {}
 		find ../../.. -maxdepth 1 2>/dev/null | grep -v ^../../..$ | grep -e ".*_node" -e ".*_planner" | sed s:../../../::g | xargs -I {} ln -s ../../../{} {}
 		cd ..
-		catkin_make -DROBOT_ARCHITECTURE_${OS_ARCHITECTURE^^}=TRUE -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra"
+		catkin_make -DROBOT_ARCHITECTURE_${OS_ARCHITECTURE^^}=TRUE -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra" -DCATKIN_ENABLE_TESTING=0
 	elif [ ${OS_ARCHITECTURE} != ${BUILD_ARCHITECTURE} ]
 	then
 		./ros_dev/run_container.sh ${DOCKER_FLAGS} -f -c "/mnt/working/ros_dev/mkrobot.sh build ${BUILD_ARCHITECTURE}"
@@ -295,6 +295,7 @@ mkrobot_test ()
 	fi
 
 	cd ${CATKIN_WS}
+	catkin_make -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra" -DCATKIN_ENABLE_TESTING=1
 	BASE_COMMAND="catkin_make"
 	BASE_TEST_ARG="run_tests_"
 	FULL_ARGS="${BASE_COMMAND}"
