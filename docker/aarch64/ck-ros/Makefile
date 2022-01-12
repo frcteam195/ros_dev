@@ -11,7 +11,7 @@ dockerpush:
 	docker push guitar24t/$(imagename):$(architecture)
 
 dockermanifest:
-	docker pull guitar24t/$(imagename):$(architecture)
+	docker pull guitar24t/$(imagename):$(oppositearchitecture)
 	docker manifest rm guitar24t/$(imagename) || true
 	docker manifest create guitar24t/$(imagename):latest guitar24t/$(imagename):$(architecture) guitar24t/$(imagename):$(oppositearchitecture)
 	docker manifest push guitar24t/$(imagename):latest
