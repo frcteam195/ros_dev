@@ -5,13 +5,13 @@ ARG NOW
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/CKimgui.git
 WORKDIR /tmp/CKimgui
-RUN make
+RUN make -j4
 RUN make install
 
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/CKimplot.git
 WORKDIR /tmp/CKimplot
-RUN make    
+RUN make -j4
 RUN make install
 
 
@@ -23,7 +23,7 @@ RUN git clone https://github.com/rst-tu-dortmund/teb_local_planner.git
 WORKDIR /tmp/catkin_ws/src/teb_local_planner
 RUN git checkout ec5759d0bf982cd2266715bc06a3385309ec3eb1
 WORKDIR /tmp/catkin_ws
-RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash; catkin_make; catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic"]
+RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash; catkin_make -j4; catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic"]
 
 ARG NOW
 
