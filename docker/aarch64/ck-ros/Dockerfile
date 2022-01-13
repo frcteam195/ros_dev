@@ -24,6 +24,17 @@ RUN git checkout ec5759d0bf982cd2266715bc06a3385309ec3eb1
 WORKDIR /tmp/catkin_ws
 RUN ["/bin/bash", "-c", "source /opt/ros/melodic/setup.bash; catkin_make -j4; catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic"]
 
+WORKDIR /tmp
+RUN git clone https://github.com/wpilibsuite/allwpilib
+WORKDIR /tmp/allwpilib
+RUN git checkout 269cf0347207516016666db24536453387f055cd
+RUN mkdir build
+WORKDIR /tmp/allwpilib/build
+RUN cmake -DWITH_JAVA=OFF -DWITH_TESTS=OFF -DWITH_CSCORE=OFF -DWITH_WPIMATH=OFF -DWITH_WPILIB=OFF -DWITH_GUI=OFF -DWITH_SIMULATION_MODULES=OFF -DBUILD_SHARED_LIBS=ON ..
+RUN make -j4 && make install
+
+WORKDIR /tmp
+
 ARG NOW
 RUN git clone https://github.com/frcteam195/container_support_files
 RUN cat container_support_files/bash.bashrc > /etc/bash.bashrc
