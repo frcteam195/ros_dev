@@ -1,3 +1,4 @@
+ARG ARCH
 FROM guitar24t/ck-ros-hal:${ARCH}
 ARG DEBIAN_FRONTEND=noninteractive
 
