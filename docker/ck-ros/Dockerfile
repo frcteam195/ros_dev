@@ -48,8 +48,8 @@ RUN mkdir -p /tmp/catkin_ws/src \
         && source /opt/ros/melodic/setup.bash \
         && rosdep install --from-paths src --ignore-src -r -y \
 	&& sed -i.bkp '/macro(CUDA_FIND_HELPER_FILE _name _extension)/i set(CUDA_CUDART_LIBRARY /usr/local/cuda/lib64/stubs)' /usr/share/cmake-3.10/Modules/FindCUDA.cmake \
-        && catkin_make -j4 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic \
-        && catkin_make -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic install \
+        && catkin_make -j4 -DCMAKE_BUILD_TYPE=Release -DCUDA_CUDART_LIBRARY=${CUDA_CUDART_LIBRARY} -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic \
+        && catkin_make -DCMAKE_BUILD_TYPE=Release -DCUDA_CUDART_LIBRARY=${CUDA_CUDART_LIBRARY} -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic install \
 	&& sed -i.bkp '/set(CUDA_CUDART_LIBRARY \/usr\/local\/cuda\/lib64\/stubs)/d' /usr/share/cmake-3.10/Modules/FindCUDA.cmake \
         && rm -Rf /tmp/*
 
