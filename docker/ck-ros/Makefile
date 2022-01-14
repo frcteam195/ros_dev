@@ -16,7 +16,7 @@ dockerpusharm:
 dockerpushx64:
 	docker push guitar24t/$(imagename):$(x64architecture)
 
-dockermanifeston:
+dockermanifest:
 	docker pull guitar24t/$(imagename):$(armarchitecture)
 	docker pull guitar24t/$(imagename):$(x64architecture)
 	docker manifest rm guitar24t/$(imagename) || true
