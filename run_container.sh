@@ -161,7 +161,14 @@ cp -r "${HOME}/.ssh" "${BASEDIR}/../.${USER}/"
 GID=$(id -g)
 #DOCKER_GID=$(cut -d: -f3 < <(getent group docker))
 
-docker pull guitar24t/ck-ros:latest || true
+INET_ONLINE=$(timeout 0.2s ping -c1 8.8.8.8 > /dev/null; echo $?)
+
+if [ ${INET_ONLINE} -eq 0 ];
+then
+	echo "Checking for container updates..."
+	docker pull guitar24t/ck-ros:latest || true
+fi
+
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
 then
 	if [ ! -z "${DETACHED_MODE}" ];
