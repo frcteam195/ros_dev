@@ -16,7 +16,7 @@ RUN git clone https://github.com/frcteam195/CKimgui.git \
 
 
 RUN apt-get update \
-	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-librealsense2 ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy \
+	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-realsense2-camera ros-melodic-librealsense2 ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy \
 	&& apt-get remove -y ros-melodic-teb-local-planner
 
 SHELL ["/bin/bash", "-c"]
@@ -65,8 +65,9 @@ RUN git clone https://github.com/wpilibsuite/allwpilib \
 	&& make install \
 	&& rm -Rf /tmp/*
 
-ARG NOW
+RUN chmod -R 775 /usr/local/zed
 
+ARG NOW
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/container_support_files \
 	&& cat container_support_files/bash.bashrc > /etc/bash.bashrc \
