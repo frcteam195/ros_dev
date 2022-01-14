@@ -8,13 +8,13 @@ dockerarm:
 	docker build -t guitar24t/$(imagename):$(armarchitecture) --build-arg ARCH=$(armarchitecture) --build-arg NOW=$(currdate) .
 
 dockerx64:
-        docker build -t guitar24t/$(imagename):$(x64architecture) --build-arg ARCH=$(x64architecture) --build-arg NOW=$(currdate) .
+	docker build -t guitar24t/$(imagename):$(x64architecture) --build-arg ARCH=$(x64architecture) --build-arg NOW=$(currdate) .
 
 dockerpusharm:
 	docker push guitar24t/$(imagename):$(armarchitecture)
 
 dockerpushx64:
-        docker push guitar24t/$(imagename):$(x64architecture)
+	docker push guitar24t/$(imagename):$(x64architecture)
 
 dockermanifeston:
 	docker pull guitar24t/$(imagename):$(armarchitecture)
