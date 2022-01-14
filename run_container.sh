@@ -169,6 +169,12 @@ then
 	docker pull guitar24t/ck-ros:latest || true
 fi
 
+DCUDA_FLAGS=
+if [ -d "/usr/local/cuda" ] ;
+then
+    DCUDA_FLAGS="--runtime nvidia"
+fi
+
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
 then
 	if [ ! -z "${DETACHED_MODE}" ];
@@ -179,52 +185,84 @@ then
 		printf "\033[2J\033[0;0H"
 	fi
 
-	docker run -it ${DETACHED_MODE} --rm \
-		-e DISPLAY=$DISPLAY_CMD \
-		$OS_SPECIFIC_FLAGS \
-		-e USER=$USER \
-		-e XAUTHORITY=$XAUTH \
-    	-v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		-v $(pwd):/mnt/working \
-		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
-		-v $XAUTH:$XAUTH \
-		--user $UID:$GID \
-		--volume="/etc/group:/etc/group:ro" \
-		--volume="/etc/gshadow:/etc/gshadow:ro" \
-    	--volume="/etc/passwd:/etc/passwd:ro" \
-    	--volume="/etc/shadow:/etc/shadow:ro" \
-    	--net=host \
-    	-e HOME=/mnt/working \
-		guitar24t/ck-ros:${DOCKER_ARCH} \
-		/bin/bash
-
-
-		#--group-add ${DOCKER_GID} \
-
+	if [ -f "/etc/nv_tegra_release" ]; then
+		docker run -it ${DETACHED_MODE} --rm \
+			-e DISPLAY=$DISPLAY_CMD \
+			-e XAUTHORITY=$XAUTH \
+			-v $(pwd):/mnt/working \
+			-v /tmp/.X11-unix:/tmp/.X11-unix \
+			-v $XAUTH:$XAUTH \
+			--runtime nvidia \
+			--privileged \
+			--volume="/etc/group:/etc/group:ro" \
+			--volume="/etc/gshadow:/etc/gshadow:ro" \
+			--volume="/etc/passwd:/etc/passwd:ro" \
+			--volume="/etc/shadow:/etc/shadow:ro" \
+			--net=host \
+			-e HOME=/mnt/working \
+			guitar24t/ck-ros:arm64 \
+			/bin/bash
+	else
+		docker run -it ${DETACHED_MODE} --rm \
+			-e DISPLAY=$DISPLAY_CMD \
+			$OS_SPECIFIC_FLAGS \
+			-e USER=$USER \
+			-e XAUTHORITY=$XAUTH \
+			-v $(pwd):/mnt/working \
+			-v /tmp/.X11-unix:/tmp/.X11-unix \
+			-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
+			-v $XAUTH:$XAUTH \
+			--user $UID:$GID \
+			${DCUDA_FLAGS} \
+			--privileged \
+			--volume="/etc/group:/etc/group:ro" \
+			--volume="/etc/gshadow:/etc/gshadow:ro" \
+			--volume="/etc/passwd:/etc/passwd:ro" \
+			--volume="/etc/shadow:/etc/shadow:ro" \
+			--net=host \
+			-e HOME=/mnt/working \
+			guitar24t/ck-ros:${DOCKER_ARCH} \
+			/bin/bash
+	fi
 else
-	docker run -it --rm \
-		-e DISPLAY=$DISPLAY_CMD \
-		$OS_SPECIFIC_FLAGS \
-		-e USER=$USER \
-		-e XAUTHORITY=$XAUTH \
-    	-v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		-v $(pwd):/mnt/working \
-		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
-		-v $XAUTH:$XAUTH \
-		--user $UID:$GID \
-		--volume="/etc/group:/etc/group:ro" \
-		--volume="/etc/gshadow:/etc/gshadow:ro" \
-    	--volume="/etc/passwd:/etc/passwd:ro" \
-    	--volume="/etc/shadow:/etc/shadow:ro" \
-    	--net=host \
-    	-e HOME=/mnt/working \
-		guitar24t/ck-ros:${DOCKER_ARCH} \
-		/bin/bash -ci "${DOCKER_CMD_VAR}"
-
-		#--group-add ${DOCKER_GID} \
+	if [ -f "/etc/nv_tegra_release" ]; then
+		docker run -it --rm \
+			-e DISPLAY=$DISPLAY_CMD \
+			-e XAUTHORITY=$XAUTH \
+			-v $(pwd):/mnt/working \
+			-v /tmp/.X11-unix:/tmp/.X11-unix \
+			-v $XAUTH:$XAUTH \
+			--runtime nvidia \
+			--privileged \
+			--volume="/etc/group:/etc/group:ro" \
+			--volume="/etc/gshadow:/etc/gshadow:ro" \
+			--volume="/etc/passwd:/etc/passwd:ro" \
+			--volume="/etc/shadow:/etc/shadow:ro" \
+			--net=host \
+			-e HOME=/mnt/working \
+			guitar24t/ck-ros:arm64 \
+			/bin/bash -ci "${DOCKER_CMD_VAR}"
+	else
+		docker run -it --rm \
+			-e DISPLAY=$DISPLAY_CMD \
+			$OS_SPECIFIC_FLAGS \
+			-e USER=$USER \
+			-e XAUTHORITY=$XAUTH \
+			-v $(pwd):/mnt/working \
+			-v /tmp/.X11-unix:/tmp/.X11-unix \
+			-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
+			-v $XAUTH:$XAUTH \
+			--user $UID:$GID \
+			${DCUDA_FLAGS} \
+			--privileged \
+			--volume="/etc/group:/etc/group:ro" \
+			--volume="/etc/gshadow:/etc/gshadow:ro" \
+			--volume="/etc/passwd:/etc/passwd:ro" \
+			--volume="/etc/shadow:/etc/shadow:ro" \
+			--net=host \
+			-e HOME=/mnt/working \
+			guitar24t/ck-ros:${DOCKER_ARCH} \
+			/bin/bash -ci "${DOCKER_CMD_VAR}"
+	fi
 
 fi
