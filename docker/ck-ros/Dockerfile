@@ -1,6 +1,5 @@
 FROM guitar24t/ck-ros-base:arm64
 ARG DEBIAN_FRONTEND=noninteractive
-ARG NOW
 
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/CKimgui.git
@@ -34,6 +33,13 @@ RUN cmake -DWITH_JAVA=OFF -DWITH_TESTS=OFF -DWITH_CSCORE=OFF -DWITH_WPIMATH=OFF 
 RUN make -j4 && make install
 
 WORKDIR /tmp
+RUN curl -SL -o zedsdk.run https://download.stereolabs.com/zedsdk/3.6/jp46/jetsons
+RUN chmod +x zedsdk.run
+RUN echo "# R32 (release), REVISION: 6.1" > /etc/nv_tegra_release
+RUN ./zedsdk.run silent skip_tools
+RUN rm -rf /usr/local/zed/resources/*
+RUN rm -rf zedsdk.run
+RUN ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so
 
 ARG NOW
 RUN git clone https://github.com/frcteam195/container_support_files
