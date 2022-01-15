@@ -16,6 +16,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A0
         && cmake .. -DBUILD_EXAMPLES=true -DCMAKE_BUILD_TYPE=release -DFORCE_RSUSB_BACKEND=false -DBUILD_WITH_CUDA=true \
         && make -j$(($(nproc)-1)) \
         && make install \
+	&& cd / \
         && rm -Rf /tmp/* \
         && ldconfig
 
