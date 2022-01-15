@@ -14,9 +14,9 @@ RUN git clone https://github.com/frcteam195/CKimgui.git \
 	&& make install \
 	&& rm -Rf /tmp/*
 
-
+RUN if [ "${ARCH}" == "amd64" ] ; then apt-get update && apt-get install -y ros-melodic-librealsense2; fi
 RUN apt-get update \
-	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-realsense2-camera ros-melodic-librealsense2 ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy \
+	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-realsense2-camera ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy \
 	&& apt-get remove -y ros-melodic-teb-local-planner
 
 SHELL ["/bin/bash", "-c"]
