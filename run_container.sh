@@ -204,7 +204,7 @@ then
 			--volume="/etc/shadow:/etc/shadow:ro" \
 			--net=host \
 			-e HOME=/mnt/working \
-			guitar24t/ck-ros:arm64 \
+			guitar24t/ck-ros:${DOCKER_ARCH} \
 			/bin/bash
 	else
 		docker run -it ${DETACHED_MODE} --rm \
@@ -244,7 +244,7 @@ else
 			--volume="/etc/shadow:/etc/shadow:ro" \
 			--net=host \
 			-e HOME=/mnt/working \
-			guitar24t/ck-ros:arm64 \
+			guitar24t/ck-ros:${DOCKER_ARCH} \
 			/bin/bash -ci "${DOCKER_CMD_VAR}"
 	else
 		docker run -it --rm \
