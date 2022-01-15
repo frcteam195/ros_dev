@@ -16,9 +16,9 @@ RUN git clone https://github.com/frcteam195/CKimgui.git \
 
 SHELL ["/bin/bash", "-c"]
 ARG ARCH
-RUN if [ "$ARCH" == "amd64" ] ; then apt-get update && apt-get install -y ros-melodic-librealsense2; fi
+RUN if [ "$ARCH" == "amd64" ] ; then apt-get update && apt-get install -y ros-melodic-librealsense2 ros-melodic-realsense2-camera; fi
 RUN apt-get update \
-	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-realsense2-camera ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy \
+	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy \
 	&& apt-get remove -y ros-melodic-teb-local-planner
 
 SHELL ["/bin/bash", "-c"]
@@ -55,6 +55,19 @@ RUN mkdir -p /tmp/catkin_ws/src \
 	&& sed -i.bkp '/set(CUDA_CUDART_LIBRARY \/usr\/local\/cuda\/lib64\/stubs)/d' /usr/share/cmake-3.10/Modules/FindCUDA.cmake \
         && rm -Rf /tmp/*
 
+SHELL ["/bin/bash", "-c"]
+RUN mkdir -p /tmp/catkin_ws/src \
+        && cd /tmp/catkin_ws/src \
+        && git clone https://github.com/IntelRealSense/realsense-ros \
+        && cd /tmp/catkin_ws/src/realsense-ros \
+        && git checkout f400d682beee6c216052a419f419e95b797255ad \
+        && cd /tmp/catkin_ws \
+        && source /opt/ros/melodic/setup.bash \
+        && rosdep install --from-paths src --ignore-src -r -y \
+        && catkin_make -j4 -DCMAKE_BUILD_TYPE=Release \
+        && catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic -DCMAKE_BUILD_TYPE=Release \
+        && rm -Rf /tmp/*
+
 SHELL ["/bin/sh", "-c"]
 WORKDIR /tmp
 RUN git clone https://github.com/wpilibsuite/allwpilib \
@@ -68,6 +81,7 @@ RUN git clone https://github.com/wpilibsuite/allwpilib \
 	&& rm -Rf /tmp/*
 
 RUN chmod -R 775 /usr/local/zed
+RUN chmod 775 /etc/udev/rules.d/99-realsense-libusb.rules
 
 ARG NOW
 WORKDIR /tmp

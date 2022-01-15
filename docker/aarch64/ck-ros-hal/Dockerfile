@@ -8,6 +8,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A0
         && apt-get install -y librealsense2-utils librealsense2-dev \
         && git clone https://github.com/IntelRealSense/librealsense \
         && cd librealsense \
+	&& git checkout c94410a420b74e5fb6a414bd12215c05ddd82b69 \
         && chmod +x ./scripts/* \
         && apt-get install git libssl-dev libusb-1.0-0-dev libudev-dev pkg-config libgtk-3-dev -y \
         && ./scripts/setup_udev_rules.sh \
