@@ -15,8 +15,6 @@ RUN git clone https://github.com/frcteam195/CKimgui.git \
 	&& rm -Rf /tmp/*
 
 SHELL ["/bin/bash", "-c"]
-ARG ARCH
-RUN if [ "$ARCH" == "amd64" ] ; then apt-get update && apt-get install -y ros-melodic-librealsense2 ros-melodic-realsense2-camera; fi
 RUN apt-get update \
 	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy \
 	&& apt-get remove -y ros-melodic-teb-local-planner
@@ -80,9 +78,11 @@ RUN git clone https://github.com/wpilibsuite/allwpilib \
 	&& make install \
 	&& rm -Rf /tmp/*
 
+SHELL ["/bin/bash", "-c"]
 RUN chmod -R 775 /usr/local/zed
-RUN chmod 775 /etc/udev/rules.d/99-realsense-libusb.rules
+RUN if [[ -f "/etc/udev/rules.d/99-realsense-libusb.rules" ]]; then chmod 775 /etc/udev/rules.d/99-realsense-libusb.rules; fi
 
+SHELL ["/bin/sh", "-c"]
 ARG NOW
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/container_support_files \
