@@ -54,7 +54,9 @@ RUN mkdir -p /tmp/catkin_ws/src \
         && rm -Rf /tmp/*
 
 SHELL ["/bin/bash", "-c"]
-RUN mkdir -p /tmp/catkin_ws/src \
+ARG ARCH
+RUN if [ "$ARCH" == "arm64" ]; then \
+	mkdir -p /tmp/catkin_ws/src \
         && cd /tmp/catkin_ws/src \
         && git clone https://github.com/IntelRealSense/realsense-ros \
         && cd /tmp/catkin_ws/src/realsense-ros \
@@ -64,7 +66,7 @@ RUN mkdir -p /tmp/catkin_ws/src \
         && rosdep install --from-paths src --ignore-src -r -y \
         && catkin_make -j4 -DCMAKE_BUILD_TYPE=Release \
         && catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic -DCMAKE_BUILD_TYPE=Release \
-        && rm -Rf /tmp/*
+        && rm -Rf /tmp/*; fi
 
 SHELL ["/bin/sh", "-c"]
 WORKDIR /tmp
