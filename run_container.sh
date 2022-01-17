@@ -166,11 +166,7 @@ INET_ONLINE=$(timeout 0.2s ping -c1 8.8.8.8 > /dev/null; echo $?)
 if [ ${INET_ONLINE} -eq 0 ];
 then
 	echo "Checking for container updates..."
-	if [ -f "/etc/nv_tegra_release" ]; then
-		docker pull guitar24t/ck-ros:arm64 || true
-	else
-		docker pull guitar24t/ck-ros:latest || true
-	fi
+	docker pull guitar24t/ck-ros:${DOCKER_ARCH} || true
 fi
 
 DCUDA_FLAGS=
