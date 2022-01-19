@@ -2,14 +2,18 @@ ARG ARCH
 FROM guitar24t/ck-ros-hal:${ARCH}
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs git git-lfs extra-cmake-modules libboost-all-dev python-pip bash-completion nano parallel
+RUN apt-get update \
+	&& apt-get upgrade -y \
+	&& apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs git git-lfs extra-cmake-modules libboost-all-dev python-pip bash-completion nano parallel \
+	&& rm -rf /var/lib/apt/lists/*
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/ros-latest.list \
 	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
 	&& apt-key list \
 	&& apt-get update \
-	&& apt-get -y install ros-melodic-desktop-full libsdl-dev libsdl-image1.2-dev libsuitesparse-dev ros-melodic-libg2o docker.io qemu libglfw3 libglfw3-dev
+	&& apt-get -y install ros-melodic-desktop-full libsdl-dev libsdl-image1.2-dev libsuitesparse-dev ros-melodic-libg2o docker.io qemu libglfw3 libglfw3-dev \
+	&& rm -rf /var/lib/apt/lists/*
 
 RUN echo 'root:robots' | chpasswd
 
@@ -17,13 +21,6 @@ RUN mkdir /mnt/working
 WORKDIR /mnt/working
 
 RUN pip install -U rosdep && rosdep init && rosdep update && pip install -U rosinstall vcstools rospkg
-
-WORKDIR /tmp
-RUN mkdir dummy \
-	&& cd /tmp/dummy \
-	&& git init \
-	&& git lfs install \
-	&& rm -Rf /tmp/*
 
 WORKDIR /tmp
 RUN git clone https://github.com/stiffstream/sobjectizer \
