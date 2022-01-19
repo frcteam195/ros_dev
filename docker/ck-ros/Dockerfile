@@ -28,10 +28,12 @@ RUN mkdir -p /tmp/catkin_ws/src \
 	&& git checkout ec5759d0bf982cd2266715bc06a3385309ec3eb1 \
 	&& cd /tmp/catkin_ws \
 	&& source /opt/ros/melodic/setup.bash \
+	&& apt-get update \
 	&& rosdep install --from-paths src --ignore-src -r -y \
 	&& catkin_make -j4 -DCMAKE_BUILD_TYPE=Release \
 	&& catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic -DCMAKE_BUILD_TYPE=Release \
-	&& rm -Rf /tmp/*
+	&& rm -Rf /tmp/* \
+	&& rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-c"]
 ENV CUDA_HOME=/usr/local/cuda
@@ -47,12 +49,14 @@ RUN mkdir -p /tmp/catkin_ws/src \
         && git checkout dcd9d972e62c2fd2bd4d3114d70194934fad364c \
         && cd /tmp/catkin_ws \
         && source /opt/ros/melodic/setup.bash \
+        && apt-get update \
         && rosdep install --from-paths src --ignore-src -r -y \
 	&& sed -i.bkp '/macro(CUDA_FIND_HELPER_FILE _name _extension)/i set(CUDA_CUDART_LIBRARY /usr/local/cuda/lib64/stubs)' /usr/share/cmake-3.10/Modules/FindCUDA.cmake \
         && catkin_make -j4 -DCMAKE_BUILD_TYPE=Release -DCUDA_CUDART_LIBRARY=${CUDA_CUDART_LIBRARY} -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic \
         && catkin_make -DCMAKE_BUILD_TYPE=Release -DCUDA_CUDART_LIBRARY=${CUDA_CUDART_LIBRARY} -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic install \
 	&& sed -i.bkp '/set(CUDA_CUDART_LIBRARY \/usr\/local\/cuda\/lib64\/stubs)/d' /usr/share/cmake-3.10/Modules/FindCUDA.cmake \
-        && rm -Rf /tmp/*
+        && rm -Rf /tmp/* \
+	&& rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-c"]
 ARG ARCH
