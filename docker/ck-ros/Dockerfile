@@ -16,7 +16,7 @@ RUN git clone https://github.com/frcteam195/CKimgui.git \
 
 SHELL ["/bin/bash", "-c"]
 RUN apt-get update \
-	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy \
+	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy ros-melodic-ddynamic-reconfigure \
 	&& apt-get remove -y ros-melodic-teb-local-planner \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -63,7 +63,6 @@ RUN mkdir -p /tmp/catkin_ws/src \
         && git checkout f400d682beee6c216052a419f419e95b797255ad \
         && cd /tmp/catkin_ws \
         && source /opt/ros/melodic/setup.bash \
-        && rosdep install --from-paths src --ignore-src -r -y \
         && catkin_make -j4 -DCMAKE_BUILD_TYPE=Release \
         && catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic -DCMAKE_BUILD_TYPE=Release \
         && rm -Rf /tmp/*
