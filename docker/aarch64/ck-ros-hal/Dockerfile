@@ -4,12 +4,13 @@ WORKDIR /tmp
 RUN apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y apt-utils software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git git-lfs \
+		asciidoc xmlto docbook2x install-info \
 	&& wget https://www.kernel.org/pub/software/scm/git/git-2.34.1.tar.gz \
 	&& tar -xzvf git-2.34.1.tar.gz \
 	&& cd git-2.34.1 \
 	&& ./configure --prefix=/usr \
 	&& make -j$(($(nproc)-1)) \
-	&& make install \
+	&& make install install-info \
 	&& cd /tmp \
 	&& mkdir gitlfs \
 	&& cd /tmp/gitlfs \
@@ -17,6 +18,8 @@ RUN apt-get update \
 	&& tar -xzvf git-lfs-linux-arm64-v3.0.2.tar.gz \
 	&& PREFIX=/usr ./install.sh \
 	&& cd /tmp \
+	&& apt-mark hold git \
+	&& apt-mark hold git-lfs \
 	&& rm -Rf /tmp/* \
 	&& rm -rf /var/lib/apt/lists/*
 
