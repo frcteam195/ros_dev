@@ -1,4 +1,4 @@
-FROM nvidia/cuda:10.2-devel-ubuntu18.04
+FROM nvcr.io/nvidia/l4t-base:r32.6.1
 ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /tmp
 RUN apt-get update \
