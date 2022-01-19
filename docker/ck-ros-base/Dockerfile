@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
 	&& apt-get upgrade -y \
-	&& apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs git git-lfs extra-cmake-modules libboost-all-dev python-pip bash-completion nano parallel \
+	&& apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs extra-cmake-modules libboost-all-dev python-pip bash-completion nano parallel \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
