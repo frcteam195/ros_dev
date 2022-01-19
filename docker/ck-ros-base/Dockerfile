@@ -119,3 +119,24 @@ RUN git clone https://github.com/wpilibsuite/allwpilib \
 	&& make -j4 \
 	&& make install \
 	&& rm -Rf /tmp/*
+
+RUN curl -SLO https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1.tar.gz \
+        && tar -xzvf cmake-3.22.1.tar.gz \
+        && cd cmake-3.22.1 \
+        && cmake . -DCMAKE_INSTALL_PREFIX=/usr \
+        && make -j4 \
+        && make install \
+        && apt-mark hold cmake \
+        && cd /tmp \
+        && rm -Rf /tmp/*
+
+RUN git clone https://gitlab.gnome.org/GNOME/libxml2.git \
+        && cd libxml2 \
+        && mkdir build \
+        && cd build \
+        && cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+        && make -j8 \
+        && make install \
+        && cd /tmp \
+        && rm -Rf /tmp/*
+
