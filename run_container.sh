@@ -1,8 +1,14 @@
 #!/bin/bash
-#launch_simulation_toolbox.sh
+#################################################
+#run_container.sh
+#Version 2022.01.18
+#Authors: FRC Team 195
+#################################################
 
-BASEDIR=$(dirname "$0")
+
+BASEDIR=$(dirname "${0}")
 source "${BASEDIR}/useful_scripts.sh"
+INET_ONLINE=$(timeout 0.5s ping -c1 8.8.8.8 > /dev/null; echo ${?})
 
 if [ ! -f "${BASEDIR}/../.bash_completion" ]; then
 	echo '#!/bin/bash' > "${BASEDIR}/../.bash_completion"
@@ -44,14 +50,16 @@ FORCED_LAUNCH=
 DOCKER_RUNNING_CMD=1
 DOCKER_ARCH=latest
 
-CONTAINER_ID=`docker ps -aq --filter "ancestor=guitar24t/ck-ros:latest" --filter "status=running"`
+CONTAINER_ID=$(docker ps -aq --filter "ancestor=guitar24t/ck-ros:latest" --filter "status=running")
 
-usage() { infomsg "Usage: $0 [-a] [-d] [-k] [-h] [-c <string>]\n\t-a Force arm64 docker container\n\t-i Force x86_64 docker container\n\t-d Run docker container in detached mode\n\t-k Kill running docker instance\n\t-c <string> Run a command in the docker container\n\t-h Display this help text \n\n" 1>&2; exit 1; }
+usage() { infomsg "Usage: ${0} [-a] [-d] [-k] [-h] [-c <string>]\n\t-a Force arm64 docker container\n\t-i Force x86_64 docker container\n\t-d Run docker container in detached mode\n\t-k Kill running docker instance\n\t-c <string> Run a command in the docker container\n\t-h Display this help text \n\n" 1>&2; exit 1; }
 while getopts "ac:dfhik" o; do
     case "${o}" in
 		a)
 			DOCKER_ARCH=arm64
-			docker pull guitar24t/ck-ros:arm64 || true
+			if [ ${INET_ONLINE} -eq 0 ]; then
+				docker pull guitar24t/ck-ros:arm64 || true
+			fi
 			;;
         d)
 			DETACHED_MODE=-d
@@ -61,7 +69,9 @@ while getopts "ac:dfhik" o; do
 			;;
 		i)	
 			DOCKER_ARCH=amd64
-			docker pull guitar24t/ck-ros:amd64 || true
+			if [ ${INET_ONLINE} -eq 0 ]; then
+				docker pull guitar24t/ck-ros:amd64 || true
+			fi
 			;;
 		k)
 			if [ ! -z "${CONTAINER_ID}" ] 
@@ -78,6 +88,7 @@ while getopts "ac:dfhik" o; do
             DOCKER_RUNNING_CMD=0
 			FORCED_LAUNCH=0
 			DOCKER_CMD_VAR="${OPTARG}"
+			DETACHED_MODE=-d
             ;;
         h | *)
             usage
@@ -86,16 +97,17 @@ while getopts "ac:dfhik" o; do
 done
 shift $((OPTIND-1))
 
-if [ ${DOCKER_ARCH} == "latest" ] && [ ! -z ${FORCED_LAUNCH} ]
-then 
-	exit_if_docker
-fi
+#TODO: Figure out why we did this
+#if [ ${DOCKER_ARCH} == "latest" ] && [ ! -z ${FORCED_LAUNCH} ]
+#then 
+#	exit_if_docker
+#fi
 
 if [ ! -z "${CONTAINER_ID}" ] && [ -z "${FORCED_LAUNCH}" ]
 then
     infomsg "Docker container is already running! We will launch a new terminal to it instead..."
     infomsg "You can stop this container using ${0} -k"
-	docker exec -it $CONTAINER_ID /bin/bash
+	docker exec -it ${CONTAINER_ID} /bin/bash
 	exit 0;
 elif [ ! -z "${CONTAINER_ID}" ] && [ ! -z "${FORCED_LAUNCH}" ]
 then
@@ -126,28 +138,43 @@ xhost + > /dev/null
 export GID=$(id -g)
 OS_NAME=$(uname -a)
 XAUTH=/tmp/.docker.xauth
-touch $XAUTH
-XDISPL=`xauth nlist $DISPLAY`
+touch ${XAUTH}
+XDISPL=$(xauth nlist ${DISPLAY})
 
-if [ ! -z "$XDISPL" ]
+if [ ! -z "${XDISPL}" ]
 then
-  xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge - > /dev/null
+  xauth nlist ${DISPLAY} | sed -e 's/^..../ffff/' | xauth -f ${XAUTH} nmerge - > /dev/null
 fi
 
-chmod 777 $XAUTH
+chmod 777 ${XAUTH}
 
-if [[ $OSTYPE == 'darwin'* ]]; then
-  DISPLAY_CMD=`echo $DISPLAY | sed 's/^[^:]*\(.*\)/host.docker.internal\1/'`
-else
-  DISPLAY_CMD=$DISPLAY
+DISPLAY_FLAGS="-e DISPLAY=${DISPLAY}"
+USER_FLAGS="-e USER=${USER} --user ${UID}:${GID}"
+RENDERING_FLAGS="--device=/dev/dri:/dev/dri"
+DCUDA_FLAGS=""
+USER_HOME_MAPPING_FLAGS="-v $(realpath ${BASEDIR}/../.${USER}/):/home/${USER}"
+
+#Running on macOS
+if [[ ${OS_NAME} == *"Darwin"* ]]; then
+	DISPLAY_CMD=`echo ${DISPLAY} | sed 's/^[^:]*\(.*\)/host.docker.internal\1/'`
 fi
 
-OS_SPECIFIC_FLAGS=""
+#Running on Chromebook
+if [[ "${OS_NAME}" == *"penguin"* ]]; then
+	infomsg "Chrome OS detected... Disabling rendering passthru!"
+	RENDERING_FLAGS=""
+fi
 
-if [[ "$OS_NAME" == *"penguin"* ]]; then
-	infomsg "Chrome OS detected"
-else
-	OS_SPECIFIC_FLAGS="--privileged --device=/dev/dri:/dev/dri"
+#Running on Jetson
+if [ -f "/etc/nv_tegra_release" ]; then
+	infomsg "Jetson device detected... Running as root in container!"
+	USER_FLAGS=""
+	USER_HOME_MAPPING_FLAGS=""
+fi
+
+#Running on CUDA Compatible System
+if [ -d "/usr/local/cuda" ]; then	
+	DCUDA_FLAGS="--runtime nvidia"
 fi
 
 cp ~/.gitconfig $(pwd)
@@ -155,114 +182,60 @@ cp ~/.gitconfig $(pwd)
 mkdir -p "$(pwd)/.parallel"
 touch "$(pwd)/.parallel/will-cite"
 
-mkdir -p "${BASEDIR}/../.${USER}"
-cp -r "${HOME}/.ssh" "${BASEDIR}/../.${USER}/"
+if [ "${USER_HOME_MAPPING_FLAGS}" != "" ]; then
+	mkdir -p "${BASEDIR}/../.${USER}"
+	cp -r "${HOME}/.ssh" "${BASEDIR}/../.${USER}/"
+fi
 
-GID=$(id -g)
-#DOCKER_GID=$(cut -d: -f3 < <(getent group docker))
-
-INET_ONLINE=$(timeout 0.2s ping -c1 8.8.8.8 > /dev/null; echo $?)
-
-if [ ${INET_ONLINE} -eq 0 ];
-then
-	echo "Checking for container updates..."
+if [ ${INET_ONLINE} -eq 0 ]; then
+	infomsg "Checking for container updates..."
 	docker pull guitar24t/ck-ros:${DOCKER_ARCH} || true
 fi
 
-DCUDA_FLAGS=
-if [ -d "/usr/local/cuda" ] ;
+if [ ! -z "${DETACHED_MODE}" ];
 then
-    DCUDA_FLAGS="--runtime nvidia"
+	infomsg "Launching a detached container of this docker instance:"
+else
+	#clear terminal without destroying scrollback buffer
+	printf "\033[2J\033[0;0H"
 fi
 
-if [[ "${DOCKER_RUNNING_CMD}" -eq 1 ]];
-then
-	if [ ! -z "${DETACHED_MODE}" ];
-	then
-		infomsg "Launching a detached container of this docker instance:"
-	else
-		#clear terminal without destroying scrollback buffer
-		printf "\033[2J\033[0;0H"
-	fi
+COMMAND_NEEDS_LAUNCH=1
+if [[ "${DOCKER_RUNNING_CMD}" -eq 0 && ${CONTAINER_ID} == "" ]]; then
+	COMMAND_NEEDS_LAUNCH=0
+fi
 
-	if [ -f "/etc/nv_tegra_release" ]; then
-		docker run -it ${DETACHED_MODE} --rm \
-			-e DISPLAY=$DISPLAY_CMD \
-			-e XAUTHORITY=$XAUTH \
-			-v $(pwd):/mnt/working \
-			-v /tmp/.X11-unix:/tmp/.X11-unix \
-			-v $XAUTH:$XAUTH \
-			--runtime nvidia \
-			--privileged \
-			--volume="/etc/group:/etc/group:ro" \
-			--volume="/etc/gshadow:/etc/gshadow:ro" \
-			--volume="/etc/passwd:/etc/passwd:ro" \
-			--volume="/etc/shadow:/etc/shadow:ro" \
-			--net=host \
-			-e HOME=/mnt/working \
-			guitar24t/ck-ros:${DOCKER_ARCH} \
-			/bin/bash
-	else
-		docker run -it ${DETACHED_MODE} --rm \
-			-e DISPLAY=$DISPLAY_CMD \
-			$OS_SPECIFIC_FLAGS \
-			-e USER=$USER \
-			-e XAUTHORITY=$XAUTH \
-			-v $(pwd):/mnt/working \
-			-v /tmp/.X11-unix:/tmp/.X11-unix \
-			-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
-			-v $XAUTH:$XAUTH \
-			--user $UID:$GID \
-			${DCUDA_FLAGS} \
-			--privileged \
-			--volume="/etc/group:/etc/group:ro" \
-			--volume="/etc/gshadow:/etc/gshadow:ro" \
-			--volume="/etc/passwd:/etc/passwd:ro" \
-			--volume="/etc/shadow:/etc/shadow:ro" \
-			--net=host \
-			-e HOME=/mnt/working \
-			guitar24t/ck-ros:${DOCKER_ARCH} \
-			/bin/bash
-	fi
-else
-	if [ -f "/etc/nv_tegra_release" ]; then
-		docker run -it --rm \
-			-e DISPLAY=$DISPLAY_CMD \
-			-e XAUTHORITY=$XAUTH \
-			-v $(pwd):/mnt/working \
-			-v /tmp/.X11-unix:/tmp/.X11-unix \
-			-v $XAUTH:$XAUTH \
-			--runtime nvidia \
-			--privileged \
-			--volume="/etc/group:/etc/group:ro" \
-			--volume="/etc/gshadow:/etc/gshadow:ro" \
-			--volume="/etc/passwd:/etc/passwd:ro" \
-			--volume="/etc/shadow:/etc/shadow:ro" \
-			--net=host \
-			-e HOME=/mnt/working \
-			guitar24t/ck-ros:${DOCKER_ARCH} \
-			/bin/bash -ci "${DOCKER_CMD_VAR}"
-	else
-		docker run -it --rm \
-			-e DISPLAY=$DISPLAY_CMD \
-			$OS_SPECIFIC_FLAGS \
-			-e USER=$USER \
-			-e XAUTHORITY=$XAUTH \
-			-v $(pwd):/mnt/working \
-			-v /tmp/.X11-unix:/tmp/.X11-unix \
-			-v "$(realpath ${BASEDIR}/../.${USER}/)":"/home/$USER/" \
-			-v $XAUTH:$XAUTH \
-			--user $UID:$GID \
-			${DCUDA_FLAGS} \
-			--privileged \
-			--volume="/etc/group:/etc/group:ro" \
-			--volume="/etc/gshadow:/etc/gshadow:ro" \
-			--volume="/etc/passwd:/etc/passwd:ro" \
-			--volume="/etc/shadow:/etc/shadow:ro" \
-			--net=host \
-			-e HOME=/mnt/working \
-			guitar24t/ck-ros:${DOCKER_ARCH} \
-			/bin/bash -ci "${DOCKER_CMD_VAR}"
-	fi
+if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
+	docker run -it ${DETACHED_MODE} --rm \
+		${DISPLAY_FLAGS} \
+		${RENDERING_FLAGS} \
+		${USER_FLAGS} \
+		--ipc="host" \
+		-e XAUTHORITY=${XAUTH} \
+		-v $(pwd):/mnt/working \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		${USER_HOME_MAPPING_FLAGS} \
+		-v ${XAUTH}:${XAUTH} \
+		${DCUDA_FLAGS} \
+		--privileged \
+		--volume="/etc/group:/etc/group:ro" \
+		--volume="/etc/gshadow:/etc/gshadow:ro" \
+		--volume="/etc/passwd:/etc/passwd:ro" \
+		--volume="/etc/shadow:/etc/shadow:ro" \
+		--net=host \
+		-e HOME=/mnt/working \
+		guitar24t/ck-ros:${DOCKER_ARCH} \
+		/bin/bash
 
+	CONTAINER_ID=$(docker ps -aql --filter "ancestor=guitar24t/ck-ros:latest" --filter "status=running")
+fi
+
+if [[ "${DOCKER_RUNNING_CMD}" -eq 0 ]]; then
+	infomsg "Running command in container..."
+	docker exec -it ${CONTAINER_ID} /bin/bash -ci "${DOCKER_CMD_VAR}" || true
+	if [[ "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
+		infomsg "Stopping temporary container..."
+		docker stop ${CONTAINER_ID} > /dev/null
+	fi
+	infomsg "Done!"
 fi
