@@ -4,7 +4,7 @@ WORKDIR /tmp
 
 RUN apt-get update \
 	&& apt-get upgrade -y \
-	&& apt-get install -y apt-utils software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev \
+	&& apt-get install -y apt-utils software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git git-lfs \
 	&& wget https://www.kernel.org/pub/software/scm/git/git-2.34.1.tar.gz \
 	&& tar -xzvf git-2.34.1.tar.gz \
 	&& cd git-2.34.1 \
