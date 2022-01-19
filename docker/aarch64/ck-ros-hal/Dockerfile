@@ -1,4 +1,4 @@
-FROM stereolabs/zed:3.6-devel-jetson-jp4.6
+FROM nvidia/cuda:10.2-devel-ubuntu18.04
 ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /tmp
 RUN apt-get update \
