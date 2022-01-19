@@ -84,6 +84,10 @@ SHELL ["/bin/bash", "-c"]
 RUN chmod -R 775 /usr/local/zed
 RUN if [[ -f "/etc/udev/rules.d/99-realsense-libusb.rules" ]]; then chmod 775 /etc/udev/rules.d/99-realsense-libusb.rules; fi
 
+RUN add-apt-repository ppa:git-core/ppa \
+	&& apt-get update \
+	&& apt install -y git git-lfs
+
 SHELL ["/bin/sh", "-c"]
 ARG NOW
 WORKDIR /tmp
