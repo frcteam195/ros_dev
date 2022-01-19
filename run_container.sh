@@ -173,7 +173,8 @@ if [ -f "/etc/nv_tegra_release" ]; then
 fi
 
 #Running on CUDA Compatible System
-if [ -d "/usr/local/cuda" ]; then	
+if [ -d "/usr/local/cuda" ]; then
+	infomsg "CUDA detected... Adding CUDA support to the container"
 	DCUDA_FLAGS="--runtime nvidia"
 fi
 
