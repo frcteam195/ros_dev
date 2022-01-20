@@ -192,7 +192,7 @@ build ()
 		OS_ARCHITECTURE="aarch64"
 	fi
 
-	if [ ! $OS_ARCHITECTURE == 'aarch64' ]
+	if [ ! $OS_ARCHITECTURE == 'aarch64' ] && [ ! -f /.dockerenv ]
 	then
 		docker run --rm --privileged multiarch/qemu-user-static --reset -p yes > /dev/null
 	fi
