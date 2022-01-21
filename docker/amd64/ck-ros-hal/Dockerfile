@@ -1,11 +1,11 @@
-FROM nvidia/cuda:10.2-devel-ubuntu18.04
+FROM ubuntu:18.04
 USER root
 ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /tmp
 
 RUN apt-get update \
 	&& apt-get upgrade -y \
-	&& apt-get install -y apt-utils software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git git-lfs \
+	&& apt-get install -y apt-utils build-essential cmake software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git git-lfs \
 		asciidoc xmlto docbook2x install-info \
 	&& wget https://www.kernel.org/pub/software/scm/git/git-2.34.1.tar.gz \
 	&& tar -xzvf git-2.34.1.tar.gz \

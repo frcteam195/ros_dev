@@ -50,7 +50,7 @@ FORCED_LAUNCH=
 DOCKER_RUNNING_CMD=1
 DOCKER_ARCH=latest
 
-CONTAINER_ID=$(docker ps -aq --filter "ancestor=guitar24t/ck-ros:latest" --filter "status=running")
+CONTAINER_ID=$(docker ps -aql --filter "ancestor=guitar24t/ck-ros:${DOCKER_ARCH}" --filter "status=running")
 
 usage() { infomsg "Usage: ${0} [-a] [-d] [-k] [-h] [-c <string>]\n\t-a Force arm64 docker container\n\t-i Force x86_64 docker container\n\t-d Run docker container in detached mode\n\t-k Kill running docker instance\n\t-c <string> Run a command in the docker container\n\t-h Display this help text \n\n" 1>&2; exit 1; }
 while getopts "ac:dfhik" o; do
@@ -96,6 +96,8 @@ while getopts "ac:dfhik" o; do
     esac
 done
 shift $((OPTIND-1))
+
+CONTAINER_ID=$(docker ps -aql --filter "ancestor=guitar24t/ck-ros:${DOCKER_ARCH}" --filter "status=running")
 
 #TODO: Figure out why we did this
 #if [ ${DOCKER_ARCH} == "latest" ] && [ ! -z ${FORCED_LAUNCH} ]
