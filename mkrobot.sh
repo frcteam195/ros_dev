@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text ()
 {
-		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
+		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tdeploy \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
 }
 
 node_help_text()
@@ -89,6 +89,46 @@ launch()
 	echo "Using launchfile ${LAUNCH_FILE}"
 
 	roslaunch "${LAUNCH_FILE}"
+}
+
+deploy()
+{
+	TARGET_IP=${1:-10.1.95.5}
+
+	BASEDIR=$(dirname "$0")
+	ROOT_DIR=$(realpath $(dirname ${BASEDIR}))
+	source "${BASEDIR}/useful_scripts.sh"
+	OS_ARCHITECTURE=$(arch)
+
+	if [[ $(pwd) == *"ros_dev"* ]]; then
+	    infomsg "This script cannot be run from this directory. Attempting to fix..."
+	    cd ..
+	    if [ -d "$(pwd)/$(ls | grep *_Robot)" ]; then
+	        infomsg "Correct directory found. Launching..."
+	    else
+	        errmsg "Unable to detect the proper directory to run from..."
+	        exit 1
+	    fi
+	fi
+
+	#ROSLIB_PATH="outputs/aarch64/devel/lib"
+	#if [ $OS_ARCHITECTURE == 'aarch64' ] || [ $OS_ARCHITECTURE == 'arm64' ]
+	#then
+	#    ROSLIB_PATH="outputs/native/devel/lib"
+	#fi
+
+	BASE_PATH=$(find . -maxdepth 1 -type d -name '*_Robot*' -print -quit | xargs realpath -P)
+	#FULL_ROSLIB_PATH="${BASE_PATH}/${ROSLIB_PATH}"
+	#cd ${FULL_ROSLIB_PATH}
+	cd ${BASE_PATH}/..
+	echo "Packing robot..."
+	tar -hczf ${ROOT_DIR}/rosdeploy.tar.gz *_Robot/*
+	cd  ${ROOT_DIR}
+	echo "Deploying robot to target..."
+	scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no rosdeploy.tar.gz  team195@${TARGET_IP}:/robot
+	echo "Unpacking robot on target..."
+	ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no team195@${TARGET_IP} '/robot/ros_scripts/unpackros.sh'
+	echo "Done!"
 }
 
 node()
@@ -334,6 +374,9 @@ case "$1" in
 		;;
 	"cleanros")
 		cleanros
+		;;
+	"deploy")
+		deploy "${2}"
 		;;
 	"node")
 		node "${2}" "${3}"
