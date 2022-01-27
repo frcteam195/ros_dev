@@ -93,6 +93,15 @@ launch()
 
 deploy()
 {
+	if [ ! -f /.dockerenv ]; then
+		infomsg "This command must be run in a docker container. Running in docker for you..."
+
+		cd $SCRIPT_DIR/..
+		./ros_dev/run_container.sh -f -c "/mnt/working/ros_dev/mkrobot.sh deploy"
+		return;
+        fi
+        exit_if_not_docker
+
 	TARGET_IP=${1:-10.1.95.5}
 
 	BASEDIR=$(dirname "$0")
