@@ -72,7 +72,7 @@ launch()
 	source_setup_bash
 	if [ $# -eq 0 ]
 	then
-		LAUNCH_FILE="${ROBOT_ROOT}/launch/prod.launch"
+		LAUNCH_FILE="${ROBOT_ROOT}/launch/local.launch"
 	else
 		if [[ ${1} == *.launch ]]
 		then
