@@ -140,10 +140,3 @@ RUN git clone https://gitlab.gnome.org/GNOME/libxml2.git \
         && cd /tmp \
         && rm -Rf /tmp/*
 
-
-RUN ln -s /usr/local/wpilib/include/ntcore /usr/local/include/ntcore \
-	&& ln -s /usr/local/wpilib/include/wpiutil /usr/local/include/wpiutil \
-	&& ln -s /usr/local/wpilib/lib/libntcore.so /usr/local/lib/libntcore.so \
-	&& ln -s /usr/local/wpilib/lib/libwpiutil.so /usr/local/lib/libwpiutil.so
-
-
