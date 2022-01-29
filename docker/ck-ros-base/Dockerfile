@@ -115,7 +115,7 @@ RUN git clone https://github.com/wpilibsuite/allwpilib \
 	&& git checkout 269cf0347207516016666db24536453387f055cd \
 	&& mkdir build \
 	&& cd /tmp/allwpilib/build \
-	&& cmake -DWITH_JAVA=OFF -DWITH_TESTS=OFF -DWITH_CSCORE=OFF -DWITH_WPIMATH=OFF -DWITH_WPILIB=OFF -DWITH_GUI=OFF -DWITH_SIMULATION_MODULES=OFF -DBUILD_SHARED_LIBS=ON .. \
+	&& cmake -DWITH_JAVA=OFF -DWITH_TESTS=OFF -DWITH_CSCORE=OFF -DWITH_WPIMATH=OFF -DWITH_WPILIB=OFF -DWITH_GUI=OFF -DWITH_SIMULATION_MODULES=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr/local .. \
 	&& make -j4 \
 	&& make install \
 	&& rm -Rf /tmp/*

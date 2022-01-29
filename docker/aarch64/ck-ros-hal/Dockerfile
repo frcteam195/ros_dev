@@ -45,6 +45,6 @@ RUN git clone https://github.com/IntelRealSense/librealsense \
 	&& rm -rf /var/lib/apt/lists/* \
         && ldconfig
 
-RUN udevadm control --reload-rules && udevadm trigger
+RUN udevadm control --reload-rules; udevadm trigger
 
 WORKDIR /
