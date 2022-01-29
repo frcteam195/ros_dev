@@ -89,7 +89,7 @@ RUN git clone https://github.com/frcteam195/CKimgui.git \
 
 SHELL ["/bin/bash", "-c"]
 RUN apt-get update \
-	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy ros-melodic-ddynamic-reconfigure \
+	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy ros-melodic-ddynamic-reconfigure ros-melodic-joy ros-melodic-plotjuggler-ros \
 	&& apt-get remove -y ros-melodic-teb-local-planner \
 	&& rm -rf /var/lib/apt/lists/*
 
