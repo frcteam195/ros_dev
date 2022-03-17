@@ -180,7 +180,7 @@ if [ -d "/usr/local/cuda" ]; then
 	DCUDA_FLAGS="--runtime nvidia"
 fi
 
-cp ~/.gitconfig $(pwd)
+cp "${HOME}/.gitconfig" "$(pwd)"
 
 mkdir -p "$(pwd)/.parallel"
 touch "$(pwd)/.parallel/will-cite"
