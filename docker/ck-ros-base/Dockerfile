@@ -140,3 +140,6 @@ RUN git clone https://gitlab.gnome.org/GNOME/libxml2.git \
         && cd /tmp \
         && rm -Rf /tmp/*
 
+RUN apt-get update \
+	&& apt-get install -y default-jdk \
+	&& rm -rf /var/lib/apt/lists/*
