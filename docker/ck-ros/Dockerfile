@@ -28,5 +28,9 @@ RUN git clone https://github.com/frcteam195/container_support_files \
 	&& cp -r /root/.ros /mnt/.ros \
 	&& cp -r /root/.cache /mnt/.cache \
 	&& rm -Rf /tmp/*
+	
+RUN apt-get update \
+	&& apt-get install -y libi2c-dev \
+	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /mnt/working
