@@ -19,6 +19,18 @@ SHELL ["/bin/bash", "-c"]
 RUN if [[ -f "/etc/udev/rules.d/99-realsense-libusb.rules" ]]; then chmod 775 /etc/udev/rules.d/99-realsense-libusb.rules; fi
 
 SHELL ["/bin/sh", "-c"]
+WORKDIR /tmp
+RUN git clone https://github.com/nlohmann/json \
+	&& cd /tmp/json \
+	&& mkdir build \
+	&& cd build \
+	&& cmake .. \
+	&& make -j4 \
+	&& make install \
+	&& cd /tmp \
+	&& rm -Rf /tmp/*
+
+SHELL ["/bin/sh", "-c"]
 ARG NOW
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/container_support_files \

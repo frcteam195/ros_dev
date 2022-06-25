@@ -130,7 +130,7 @@ RUN curl -SLO https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3
         && cd /tmp \
         && rm -Rf /tmp/*
 
-RUN git clone https://gitlab.gnome.org/GNOME/libxml2.git \
+RUN git clone https://github.com/GNOME/libxml2.git \
         && cd libxml2 \
         && mkdir build \
         && cd build \
