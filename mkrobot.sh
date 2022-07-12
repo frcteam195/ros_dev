@@ -130,6 +130,12 @@ deploy()
 	#FULL_ROSLIB_PATH="${BASE_PATH}/${ROSLIB_PATH}"
 	#cd ${FULL_ROSLIB_PATH}
 	cd ${BASE_PATH}/..
+
+	if [ -d "./trajectories" ]; then
+		echo "Deploying Trajectories..."
+		scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./trajectories/*.json team195@${TARGET_IP}:/robot/trajectories
+	fi
+	
 	echo "Packing robot..."
 	tar -hczf ${ROOT_DIR}/rosdeploy.tar.gz *_Robot/*
 	cd  ${ROOT_DIR}
