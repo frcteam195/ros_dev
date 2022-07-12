@@ -133,9 +133,14 @@ deploy()
 
 	if [ -d "./trajectories" ]; then
 		echo "Deploying Trajectories..."
-		scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./trajectories/*.json team195@${TARGET_IP}:/robot/trajectories
+		rm -Rf /trajectories/tmptraj
+		mkdir -p ./trajectories/tmptraj
+		cp ./trajectories/**/*.json ./trajectories/tmptraj/
+		cp ./trajectories/*.json ./trajectories/tmptraj/ 2>>/dev/null
+		scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./trajectories/tmptraj/*.json team195@${TARGET_IP}:/robot/trajectories
+		rm -Rf ./trajectories/tmptraj
 	fi
-	
+
 	echo "Packing robot..."
 	tar -hczf ${ROOT_DIR}/rosdeploy.tar.gz *_Robot/*
 	cd  ${ROOT_DIR}
