@@ -137,6 +137,7 @@ deploy()
 		mkdir -p ./trajectories/tmptraj
 		cp ./trajectories/**/*.json ./trajectories/tmptraj/
 		cp ./trajectories/*.json ./trajectories/tmptraj/ 2>>/dev/null
+		ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no team195@${TARGET_IP} 'rm -Rf /robot/trajectories/*'
 		scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./trajectories/tmptraj/*.json team195@${TARGET_IP}:/robot/trajectories
 		rm -Rf ./trajectories/tmptraj
 	fi
