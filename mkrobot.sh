@@ -95,7 +95,7 @@ push()
 				sudo apt-get update
 				sudo apt-get install -y parallel
 		fi
-		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} push; git push origin --tags"
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} push; git -C {} push origin --tags"
 }
 
 tag()
