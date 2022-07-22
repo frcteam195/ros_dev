@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text ()
 {
-		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tdeletetag \n\tdeploy \n\tnode \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\ttag \n\ttest \n\tupdate"
+		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tcheckout \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tdeletetag \n\tdeploy \n\tnode \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\ttag \n\ttest \n\tupdate"
 }
 
 node_help_text()
@@ -53,6 +53,22 @@ update()
 				sudo apt-get install -y parallel
 		fi
 		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} pull"
+}
+
+checkout()
+{
+	if [ $# -eq 0 ]
+	then
+		errmsg "\nCommit hash is not specified. Please enter a commit hash"
+		return 1;
+	fi
+		if ! command -v parallel &> /dev/null
+		then
+				infomsg "Installing parallel..."
+				sudo apt-get update
+				sudo apt-get install -y parallel
+		fi
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} checkout ${1}"
 }
 
 commit()
@@ -447,6 +463,9 @@ fi
 case "$1" in
 	"build")
 		build $2
+		;;
+	"checkout")
+		checkout "${2}"
 		;;
 	"clone")
 		clone
