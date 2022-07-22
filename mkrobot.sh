@@ -116,7 +116,7 @@ tag()
 				sudo apt-get update
 				sudo apt-get install -y parallel
 		fi
-		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} tag -a ${1} -m ${2}"
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} tag -a ${1} -m \"${2}\""
 }
 
 deletetag()
