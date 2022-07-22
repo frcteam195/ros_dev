@@ -59,7 +59,7 @@ checkout()
 {
 	if [ $# -eq 0 ]
 	then
-		errmsg "\nCommit hash is not specified. Please enter a commit hash"
+		errmsg "\nTag name is not specified. Please enter a tag name"
 		return 1;
 	fi
 		if ! command -v parallel &> /dev/null
