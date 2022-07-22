@@ -55,6 +55,22 @@ update()
 		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} pull"
 }
 
+commit()
+{
+	if [ $# -eq 0 ]
+	then
+		errmsg "\nCommit message is not specified. Please enter a commit message"
+		return 1;
+	fi
+		if ! command -v parallel &> /dev/null
+		then
+				infomsg "Installing parallel..."
+				sudo apt-get update
+				sudo apt-get install -y parallel
+		fi
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} add -A; git -C {} commit -m ${1}"
+}
+
 source_setup_bash()
 {
 	if [ -f "$CATKIN_WS/devel/setup.bash" ]
@@ -395,6 +411,9 @@ case "$1" in
 		;;
 	"cleanros")
 		cleanros
+		;;
+	"commit")
+		commit "$@"
 		;;
 	"deploy")
 		deploy "${2}"
