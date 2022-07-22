@@ -110,18 +110,13 @@ deletetag()
 		errmsg "\Tag version is not specified. Please enter a tag version"
 		return 1;
 	fi
-	if [ $# -lt 2 ]
-	then
-		errmsg "\Tag message is not specified. Please enter a tag message"
-		return 1;
-	fi
 		if ! command -v parallel &> /dev/null
 		then
 				infomsg "Installing parallel..."
 				sudo apt-get update
 				sudo apt-get install -y parallel
 		fi
-		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} tag -a ${1} -m ${2}"
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git tag -d ${1}; git -C {} push origin :refs/tags/${1}"
 }
 
 source_setup_bash()
