@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text ()
 {
-		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tdeploy \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
+		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tdeploy \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\tupdate"
 }
 
 node_help_text()
@@ -69,6 +69,17 @@ commit()
 				sudo apt-get install -y parallel
 		fi
 		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} add -A; git -C {} commit -m ${1}"
+}
+
+push()
+{
+		if ! command -v parallel &> /dev/null
+		then
+				infomsg "Installing parallel..."
+				sudo apt-get update
+				sudo apt-get install -y parallel
+		fi
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} push"
 }
 
 source_setup_bash()
@@ -420,6 +431,9 @@ case "$1" in
 		;;
 	"node")
 		node "${2}" "${3}"
+		;;
+	"push")
+		push
 		;;
 	"rebuild")
 		rebuild
