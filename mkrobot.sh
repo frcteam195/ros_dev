@@ -132,7 +132,7 @@ deletetag()
 				sudo apt-get update
 				sudo apt-get install -y parallel
 		fi
-		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git tag -d ${1}; git -C {} push origin :refs/tags/${1}"
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} tag -d ${1}; git -C {} push origin :refs/tags/${1}"
 }
 
 source_setup_bash()
