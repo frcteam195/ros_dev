@@ -52,7 +52,7 @@ update()
 				sudo apt-get update
 				sudo apt-get install -y parallel
 		fi
-		find . -name ".git" -type d -exec dirname {} \; | parallel "printf {} | git -C {} pull"
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} pull"
 }
 
 source_setup_bash()
