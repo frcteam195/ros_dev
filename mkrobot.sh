@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text ()
 {
-		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tdeploy \n\tnode \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\ttag \n\ttest \n\tupdate"
+		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tdeletetag \n\tdeploy \n\tnode \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\ttag \n\ttest \n\tupdate"
 }
 
 node_help_text()
@@ -83,6 +83,27 @@ push()
 }
 
 tag()
+{
+	if [ $# -lt 1 ]
+	then
+		errmsg "\Tag version is not specified. Please enter a tag version"
+		return 1;
+	fi
+	if [ $# -lt 2 ]
+	then
+		errmsg "\Tag message is not specified. Please enter a tag message"
+		return 1;
+	fi
+		if ! command -v parallel &> /dev/null
+		then
+				infomsg "Installing parallel..."
+				sudo apt-get update
+				sudo apt-get install -y parallel
+		fi
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} tag -a ${1} -m ${2}"
+}
+
+deletetag()
 {
 	if [ $# -lt 1 ]
 	then
@@ -447,6 +468,9 @@ case "$1" in
 	"commit")
 		commit "$@"
 		;;
+	"deletetag")
+		deletetag "${2}"
+		;;
 	"deploy")
 		deploy "${2}"
 		;;
@@ -466,7 +490,7 @@ case "$1" in
 		rebuildros
 		;;
 	"tag")
-		tag "$@"
+		tag "${2}" "${3}"
 		;;
 	"test")
 		mkrobot_test "$@"
