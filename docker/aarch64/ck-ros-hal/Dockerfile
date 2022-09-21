@@ -8,7 +8,7 @@ RUN apt-get update \
 	&& apt-get install -y apt-utils \
 	&& apt-get upgrade -y \
 	&& apt-get install -y software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git git-lfs \
-		asciidoc xmlto docbook2x install-info git git-lfs \
+		asciidoc xmlto docbook2x install-info \
 	&& cd /tmp \
 	&& rm -Rf /tmp/* \
 	&& rm -rf /var/lib/apt/lists/*
@@ -20,6 +20,11 @@ RUN apt-get update \
 SHELL ["/bin/bash", "-c"]
 RUN apt-get update && apt-get install libssl-dev libusb-1.0-0-dev libudev-dev pkg-config libgtk-3-dev unzip sudo -y \
 	&& rm -Rf /tmp/* \
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN add-apt-repository ppa:git-core/ppa \
+	&& apt-get update \
+	&& apt-get install git git-lfs \
 	&& rm -rf /var/lib/apt/lists/*
 
 # RUN git clone https://github.com/IntelRealSense/librealsense \
