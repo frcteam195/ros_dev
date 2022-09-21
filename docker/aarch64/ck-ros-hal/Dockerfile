@@ -1,22 +1,24 @@
 FROM nvcr.io/nvidia/l4t-base:r35.1.0
 USER root
 ARG DEBIAN_FRONTEND=noninteractive
+ARG GITVER=2.37.3
+ARG GITLFSVER=3.2.0
 WORKDIR /tmp
 RUN apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y apt-utils software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git git-lfs \
 		asciidoc xmlto docbook2x install-info \
-	&& wget https://www.kernel.org/pub/software/scm/git/git-2.34.1.tar.gz \
-	&& tar -xzvf git-2.34.1.tar.gz \
-	&& cd git-2.34.1 \
+	&& wget https://www.kernel.org/pub/software/scm/git/git-${GITVER}.tar.gz \
+	&& tar -xzvf git-${GITVER}.tar.gz \
+	&& cd git-${GITVER} \
 	&& ./configure --prefix=/usr \
 	&& make -j$(($(nproc)-1)) \
 	&& make install install-info \
 	&& cd /tmp \
 	&& mkdir gitlfs \
 	&& cd /tmp/gitlfs \
-	&& wget https://github.com/git-lfs/git-lfs/releases/download/v3.0.2/git-lfs-linux-arm64-v3.0.2.tar.gz \
-	&& tar -xzvf git-lfs-linux-arm64-v3.0.2.tar.gz \
+	&& wget https://github.com/git-lfs/git-lfs/releases/download/v${GITLFSVER}/git-lfs-linux-arm64-v${GITLFSVER}.tar.gz \
+	&& tar -xzvf git-lfs-linux-arm64-v${GITLFSVER}.tar.gz \
 	&& PREFIX=/usr ./install.sh \
 	&& cd /tmp \
 	&& apt-mark hold git \
