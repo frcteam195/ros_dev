@@ -3,11 +3,12 @@ LABEL Name="ck-ros-hal-aarch64"
 LABEL Version="35.1.0"
 USER root
 ARG DEBIAN_FRONTEND=noninteractive
+ARG GITLFSVER=2.30.0
 WORKDIR /tmp
 RUN apt-get update \
 	&& apt-get install -y apt-utils \
 	&& apt-get upgrade -y \
-	&& apt-get install -y software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git git-lfs \
+	&& apt-get install -y software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev \
 		asciidoc xmlto docbook2x install-info \
 	&& cd /tmp \
 	&& rm -Rf /tmp/* \
@@ -24,7 +25,16 @@ RUN apt-get update && apt-get install libssl-dev libusb-1.0-0-dev libudev-dev pk
 
 RUN add-apt-repository ppa:git-core/ppa \
 	&& apt-get update \
-	&& apt-get install git git-lfs \
+	&& apt-get install git \
+	&& cd /tmp \
+	&& mkdir gitlfs \
+	&& cd /tmp/gitlfs \
+	&& wget https://github.com/git-lfs/git-lfs/releases/download/v${GITLFSVER}/git-lfs-linux-arm64-v${GITLFSVER}.tar.gz \
+	&& tar -xzvf git-lfs-linux-arm64-v${GITLFSVER}.tar.gz \
+	&& PREFIX=/usr ./install.sh \
+	&& cd /tmp \
+	&& apt-mark hold git-lfs \
+	&& rm -Rf /tmp/* \
 	&& rm -rf /var/lib/apt/lists/*
 
 # RUN git clone https://github.com/IntelRealSense/librealsense \
