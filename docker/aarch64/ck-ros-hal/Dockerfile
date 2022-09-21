@@ -8,7 +8,7 @@ RUN apt-get update \
 	&& apt-get install -y apt-utils \
 	&& apt-get upgrade -y \
 	&& apt-get install -y software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git git-lfs \
-		asciidoc xmlto docbook2x install-info \
+		asciidoc xmlto docbook2x install-info git git-lfs \
 	&& cd /tmp \
 	&& rm -Rf /tmp/* \
 	&& rm -rf /var/lib/apt/lists/*
