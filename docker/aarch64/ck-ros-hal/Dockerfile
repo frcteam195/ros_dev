@@ -3,7 +3,7 @@ LABEL Name="ck-ros-hal-aarch64"
 LABEL Version="35.1.0"
 USER root
 ARG DEBIAN_FRONTEND=noninteractive
-ARG GITLFSVER=2.30.0
+ARG GITLFSVER=3.2.0
 WORKDIR /tmp
 RUN apt-get update \
 	&& apt-get install -y apt-utils \
