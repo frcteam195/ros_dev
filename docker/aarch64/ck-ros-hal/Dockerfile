@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-base:r32.6.1
+FROM nvcr.io/nvidia/l4t-base:r35.1.0
 USER root
 ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /tmp
