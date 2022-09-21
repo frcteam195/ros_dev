@@ -31,6 +31,7 @@ RUN add-apt-repository ppa:git-core/ppa \
 	&& cd /tmp/gitlfs \
 	&& wget https://github.com/git-lfs/git-lfs/releases/download/v${GITLFSVER}/git-lfs-linux-arm64-v${GITLFSVER}.tar.gz \
 	&& tar -xzvf git-lfs-linux-arm64-v${GITLFSVER}.tar.gz \
+	&& cd git-lfs-${GITLFSVER} \
 	&& PREFIX=/usr ./install.sh \
 	&& cd /tmp \
 	&& apt-mark hold git-lfs \
