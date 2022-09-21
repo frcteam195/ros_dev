@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install libssl-dev libusb-1.0-0-dev libudev-dev pk
 
 RUN add-apt-repository ppa:git-core/ppa \
 	&& apt-get update \
-	&& apt-get install git \
+	&& apt-get install -y git \
 	&& cd /tmp \
 	&& mkdir gitlfs \
 	&& cd /tmp/gitlfs \
