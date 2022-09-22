@@ -161,8 +161,7 @@ RUN git clone https://github.com/frcteam195/osgbullet.git \
 		&& git checkout osg-3.5.6 \
         && mkdir build \
         && cd build \
-		&& export osgWorks_DIR=/usr/lib/$(echo arch)-linux-gnu \
-        && cmake .. -DOpenGL_GL_PREFERENCE=GLVND -DBUILD_SHARED_LIBS=1 -DosgWorks_DIR=/usr/lib/$(echo arch)-linux-gnu -DCMAKE_INSTALL_PREFIX=/usr \
+        && cmake .. -DBUILD_SHARED_LIBS=1 -DosgWorks_DIR=/usr/lib/$(arch)-linux-gnu -DCMAKE_INSTALL_PREFIX=/usr \
         && make -j8 \
         && make install \
         && cd /tmp \
