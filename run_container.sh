@@ -209,6 +209,10 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 0 && ${CONTAINER_ID} == "" ]]; then
 fi
 
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
+	rm -Rf $(pwd)/.vscode
+	mkdir $(pwd)/.vscode
+	cp $(pwd)/ros_dev/vscode_workspace_config/* $(pwd)/.vscode/
+
 	docker run -it ${DETACHED_MODE} --rm \
 		${DISPLAY_FLAGS} \
 		${RENDERING_FLAGS} \
