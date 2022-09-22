@@ -156,11 +156,12 @@ RUN git clone https://github.com/frcteam195/osgworks.git \
         && cd /tmp \
         && rm -Rf /tmp/*
 
-RUN git clone https://github.com/mccdo/osgbullet.git \
+RUN git clone https://github.com/frcteam195/osgbullet.git \
         && cd osgbullet \
+		&& git checkout osg-3.5.6 \
         && mkdir build \
         && cd build \
-        && cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+        && cmake .. -DOpenGL_GL_PREFERENCE=GLVND -DosgWorks_DIR=/usr/share/osgWorks -DCMAKE_INSTALL_PREFIX=/usr \
         && make -j8 \
         && make install \
         && cd /tmp \
