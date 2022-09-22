@@ -142,7 +142,7 @@ RUN git clone https://github.com/GNOME/libxml2.git \
         && rm -Rf /tmp/*
 
 RUN apt-get update \
-	&& apt-get install -y default-jdk openscenegraph openscenegraph-dev libbullet-dev  \
+	&& apt-get install -y default-jdk openscenegraph libopenscenegraph-dev libbullet-dev  \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/mccdo/osgbullet.git \
