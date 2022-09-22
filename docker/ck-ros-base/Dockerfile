@@ -154,7 +154,7 @@ RUN git clone https://github.com/frcteam195/osgworks.git \
         && make -j8 \
         && make install \
 		&& cd /tmp \
-		git clone https://github.com/frcteam195/osgbullet.git \
+		&& git clone https://github.com/frcteam195/osgbullet.git \
         && cd osgbullet \
 		&& git checkout osg-3.5.6 \
         && mkdir build \
