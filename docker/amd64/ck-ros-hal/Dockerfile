@@ -7,8 +7,9 @@ ARG GITLFSVER=3.2.0
 WORKDIR /tmp
 
 RUN apt-get update \
+	&& apt-get install -y apt-utils \
 	&& apt-get upgrade -y \
-	&& apt-get install -y apt-utils build-essential cmake software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev \
+	&& apt-get install -y build-essential cmake software-properties-common wget dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev \
 		asciidoc xmlto docbook2x install-info \
 	&& rm -rf /var/lib/apt/lists/*
 
