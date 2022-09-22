@@ -149,7 +149,7 @@ RUN git clone https://github.com/mccdo/osgworks.git \
         && cd osgworks \
         && mkdir build \
         && cd build \
-        && cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+        && cmake .. -DOpenGL_GL_PREFERENCE=GLVND -DCMAKE_INSTALL_PREFIX=/usr \
         && make -j8 \
         && make install \
         && cd /tmp \
