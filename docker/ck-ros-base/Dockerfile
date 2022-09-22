@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG CMAKEVER=3.24.2
 RUN apt-get update \
 	&& apt-get upgrade -y \
-	&& apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs extra-cmake-modules libboost-all-dev python-pip bash-completion nano parallel \
+	&& apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs extra-cmake-modules libboost-all-dev python3-pip bash-completion nano parallel \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
@@ -20,7 +20,7 @@ RUN echo 'root:robots' | chpasswd
 RUN mkdir /mnt/working
 WORKDIR /mnt/working
 
-RUN pip install -U rosdep && rosdep init && rosdep update && pip install -U rosinstall vcstools rospkg
+RUN pip3 install -U rosdep && rosdep init && rosdep update && pip3 install -U rosinstall vcstools rospkg
 
 WORKDIR /tmp
 RUN git clone https://github.com/stiffstream/sobjectizer \
