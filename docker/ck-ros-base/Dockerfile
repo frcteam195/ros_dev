@@ -145,7 +145,8 @@ RUN apt-get update \
 	&& apt-get install -y default-jdk openscenegraph libopenscenegraph-dev libbullet-dev  \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/mccdo/osgworks.git \
+RUN git clone https://github.com/frcteam195/osgworks.git \
+		&& git checkout osg-3.5.6 \
         && cd osgworks \
         && mkdir build \
         && cd build \
