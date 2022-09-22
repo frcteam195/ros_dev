@@ -146,8 +146,8 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/frcteam195/osgworks.git \
-		&& git checkout osg-3.5.6 \
         && cd osgworks \
+		&& git checkout osg-3.5.6 \
         && mkdir build \
         && cd build \
         && cmake .. -DOpenGL_GL_PREFERENCE=GLVND -DCMAKE_INSTALL_PREFIX=/usr \
