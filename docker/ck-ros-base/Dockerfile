@@ -142,5 +142,15 @@ RUN git clone https://github.com/GNOME/libxml2.git \
         && rm -Rf /tmp/*
 
 RUN apt-get update \
-	&& apt-get install -y default-jdk \
+	&& apt-get install -y default-jdk openscenegraph openscenegraph-dev libbullet-dev  \
 	&& rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/mccdo/osgbullet.git \
+        && cd osgbullet \
+        && mkdir build \
+        && cd build \
+        && cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+        && make -j8 \
+        && make install \
+        && cd /tmp \
+        && rm -Rf /tmp/*
