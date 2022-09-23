@@ -1,10 +1,10 @@
 ARG ARCH
 FROM guitar24t/ck-ros-hal:${ARCH}
 ARG DEBIAN_FRONTEND=noninteractive
-
+ARG CMAKEVER=3.24.2
 RUN apt-get update \
 	&& apt-get upgrade -y \
-	&& apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs extra-cmake-modules libboost-all-dev python-pip bash-completion nano parallel \
+	&& apt-get install -y apt-utils wget software-properties-common x11-apps net-tools iputils-ping vim emacs extra-cmake-modules libboost-all-dev python3-pip bash-completion nano parallel \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
@@ -12,7 +12,7 @@ RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" | tee 
 	&& apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
 	&& apt-key list \
 	&& apt-get update \
-	&& apt-get -y install ros-melodic-desktop-full libsdl-dev libsdl-image1.2-dev libsuitesparse-dev ros-melodic-libg2o docker.io qemu libglfw3 libglfw3-dev \
+	&& apt-get -y install ros-noetic-desktop-full libsdl-dev libsdl-image1.2-dev libsuitesparse-dev ros-noetic-libg2o docker.io qemu libglfw3 libglfw3-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN echo 'root:robots' | chpasswd
@@ -20,7 +20,7 @@ RUN echo 'root:robots' | chpasswd
 RUN mkdir /mnt/working
 WORKDIR /mnt/working
 
-RUN pip install -U rosdep && rosdep init && rosdep update && pip install -U rosinstall vcstools rospkg
+RUN pip3 install -U rosdep && rosdep init && rosdep update && pip3 install -U rosinstall vcstools rospkg
 
 WORKDIR /tmp
 RUN git clone https://github.com/stiffstream/sobjectizer \
@@ -89,24 +89,25 @@ RUN git clone https://github.com/frcteam195/CKimgui.git \
 
 SHELL ["/bin/bash", "-c"]
 RUN apt-get update \
-	&& apt-get install -y mesa-utils curl ros-melodic-common-msgs ros-melodic-rtabmap ros-melodic-rtabmap-ros ros-melodic-teb-local-planner ros-melodic-robot-localization libgeographic-dev libgtest-dev ros-melodic-turtlebot3-simulations ros-melodic-turtlebot3-gazebo ros-melodic-turtlebot3 clang-tidy ros-melodic-ddynamic-reconfigure ros-melodic-joy ros-melodic-plotjuggler-ros \
-	&& apt-get remove -y ros-melodic-teb-local-planner \
+	&& apt-get install -y mesa-utils curl ros-noetic-common-msgs ros-noetic-rtabmap ros-noetic-rtabmap-ros ros-noetic-robot-localization libgeographic-dev libgtest-dev ros-noetic-turtlebot3-simulations ros-noetic-turtlebot3-gazebo ros-noetic-turtlebot3 clang-tidy ros-noetic-ddynamic-reconfigure ros-noetic-joy ros-noetic-plotjuggler-ros \
+	&& apt-get remove -y ros-noetic-teb-local-planner \
 	&& rm -rf /var/lib/apt/lists/*
 
-SHELL ["/bin/bash", "-c"]
-RUN mkdir -p /tmp/catkin_ws/src \
-	&& cd /tmp/catkin_ws/src \
-	&& git clone https://github.com/rst-tu-dortmund/teb_local_planner.git \
-	&& cd /tmp/catkin_ws/src/teb_local_planner \
-	&& git checkout ec5759d0bf982cd2266715bc06a3385309ec3eb1 \
-	&& cd /tmp/catkin_ws \
-	&& source /opt/ros/melodic/setup.bash \
-	&& apt-get update \
-	&& rosdep install --from-paths src --ignore-src -r -y \
-	&& catkin_make -j4 -DCMAKE_BUILD_TYPE=Release \
-	&& catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic -DCMAKE_BUILD_TYPE=Release \
-	&& rm -Rf /tmp/* \
-	&& rm -rf /var/lib/apt/lists/*
+#Example of how to build and install a ROS package from source
+# SHELL ["/bin/bash", "-c"]
+# RUN mkdir -p /tmp/catkin_ws/src \
+# 	&& cd /tmp/catkin_ws/src \
+# 	&& git clone https://github.com/rst-tu-dortmund/teb_local_planner.git \
+# 	&& cd /tmp/catkin_ws/src/teb_local_planner \
+# 	&& git checkout ec5759d0bf982cd2266715bc06a3385309ec3eb1 \
+# 	&& cd /tmp/catkin_ws \
+# 	&& source /opt/ros/noetic/setup.bash \
+# 	&& apt-get update \
+# 	&& rosdep install --from-paths src --ignore-src -r -y \
+# 	&& catkin_make -j4 -DCMAKE_BUILD_TYPE=Release \
+# 	&& catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/noetic -DCMAKE_BUILD_TYPE=Release \
+# 	&& rm -Rf /tmp/* \
+# 	&& rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/sh", "-c"]
 WORKDIR /tmp
@@ -120,9 +121,9 @@ RUN git clone https://github.com/wpilibsuite/allwpilib \
 	&& make install \
 	&& rm -Rf /tmp/*
 
-RUN curl -SLO https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1.tar.gz \
-        && tar -xzvf cmake-3.22.1.tar.gz \
-        && cd cmake-3.22.1 \
+RUN curl -SLO https://github.com/Kitware/CMake/releases/download/v${CMAKEVER}/cmake-${CMAKEVER}.tar.gz \
+        && tar -xzvf cmake-${CMAKEVER}.tar.gz \
+        && cd cmake-${CMAKEVER} \
         && cmake . -DCMAKE_INSTALL_PREFIX=/usr \
         && make -j4 \
         && make install \
@@ -141,5 +142,27 @@ RUN git clone https://github.com/GNOME/libxml2.git \
         && rm -Rf /tmp/*
 
 RUN apt-get update \
-	&& apt-get install -y default-jdk \
+	&& apt-get install -y default-jdk openscenegraph libopenscenegraph-dev libbullet-dev  \
 	&& rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/frcteam195/osgworks.git \
+        && cd osgworks \
+		&& git checkout osg-3.5.6 \
+        && mkdir build \
+        && cd build \
+        && cmake .. -DOpenGL_GL_PREFERENCE=GLVND -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX=/usr \
+        && make -j8 \
+        && make install \
+        && cd /tmp \
+        && rm -Rf /tmp/*
+
+RUN git clone https://github.com/frcteam195/osgbullet.git \
+        && cd osgbullet \
+		&& git checkout osg-3.5.6 \
+        && mkdir build \
+        && cd build \
+        && cmake .. -DBUILD_SHARED_LIBS=1 -DosgWorks_DIR=/usr/lib/$(arch)-linux-gnu -DCMAKE_INSTALL_PREFIX=/usr \
+        && make -j8 \
+        && make install \
+        && cd /tmp \
+        && rm -Rf /tmp/*
