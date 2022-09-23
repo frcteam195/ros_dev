@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/opt/ros/melodic/include/**",
+                "/usr/include/eigen3/Eigen/**",
                 "/usr/local/wpilib/include/ntcore/**",
                 "/usr/local/wpilib/include/wpiutil/**"
             ],
