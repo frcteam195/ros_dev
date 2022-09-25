@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text ()
 {
-		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tcheckout \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tdeletetag \n\tdeploy \n\tnode \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\ttag \n\ttest \n\tupdate"
+		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tcheckout \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tdeletetag \n\tdeploy \n\tnode \n\tnode_python \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\ttag \n\ttest \n\tupdate"
 }
 
 node_help_text()
@@ -265,6 +265,53 @@ node()
 	mv include/tt_node.hpp "include/${1}.hpp"
 	mv test/src/test_tt_node.cpp "test/src/test_${1}.cpp"
 	mv test/include/test_tt_node.hpp "test/include/test_${1}.hpp"
+
+	if [ -z "${2}" ]; then
+		return
+	fi
+	cd $SCRIPT_DIR/..
+	git clone "${2}" temp_repo
+	shopt -s dotglob
+	mv temp_repo/* "${1}"
+	cd "${1}"
+	git add -A
+	git commit -m "Initial commit"
+	git push
+	cd $SCRIPT_DIR/..
+	rm -Rf temp_repo/
+}
+
+node_python()
+{
+	if [ -z "${1}" ]; then
+		errmsg "\nNode name is not specified. Please enter a node name" "noexit"
+		node_help_text
+		return
+	fi
+	if [[ "${1}" = *[[:space:]]* ]]
+	then
+		errmsg "\nPlease enter a node name that does not have any spaces"
+		node_help_text
+		return
+	fi
+
+	if [[ "${1}" != *_node ]]
+	then
+		errmsg "\nPlease enter a node name that ends in node"
+		node_help_text
+		return
+	fi
+
+	cd $SCRIPT_DIR/..
+	git clone git@github.com:frcteam195/template_python_node.git
+	rm -Rf template_python_node/.git
+
+	mv template_python_node/ "${1}/"
+	cd ${1}
+	find . -type f | grep -v ^.$ | xargs sed -i "s/template_python_node/${1}/g"
+	# find . -type f | grep -v ^.$ | xargs sed -i "s/template_python_node/${1}/g"
+	mv src/template_python_node src/${1}
+	mv src/${1}/template_python_node.py "src/${1}/${1}.py"
 
 	if [ -z "${2}" ]; then
 		return
@@ -592,6 +639,9 @@ case "$1" in
 		;;
 	"node")
 		node "${2}" "${3}"
+		;;
+	"node_python")
+		node_python "${2}" "${3}"
 		;;
 	"push")
 		push
