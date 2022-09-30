@@ -310,8 +310,8 @@ node_python()
 	cd ${1}
 	find . -type f | grep -v ^.$ | xargs sed -i "s/template_python_node/${1}/g"
 	# find . -type f | grep -v ^.$ | xargs sed -i "s/template_python_node/${1}/g"
+	mv scripts/template_python_node scripts/${1}
 	mv src/template_python_node src/${1}
-	mv src/${1}/template_python_node.py "src/${1}/${1}.py"
 
 	if [ -z "${2}" ]; then
 		return
