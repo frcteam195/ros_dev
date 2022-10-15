@@ -30,6 +30,29 @@ RUN git clone https://github.com/nlohmann/json \
 	&& cd /tmp \
 	&& rm -Rf /tmp/*
 
+SHELL ["/bin/bash", "-c"]
+RUN apt-get update \
+    && apt-get remove -y ros-noetic-robot-localization \
+    && rm -rf /var/lib/apt/lists/*
+
+SHELL ["/bin/bash", "-c"]
+RUN mkdir -p /tmp/catkin_ws/src \
+	&& cd /tmp/catkin_ws/src \
+	&& git clone https://github.com/cra-ros-pkg/robot_localization.git \
+	&& cd /tmp/catkin_ws/src/robot_localization \
+	&& git checkout bd5d0fee8771e3b8e7dec9b7085d8e7ccc3ff1ff \
+	&& cd /tmp/catkin_ws \
+	&& source /opt/ros/noetic/setup.bash \
+	&& apt-get update \
+	&& rosdep install --from-paths src --ignore-src -r -y \
+	&& catkin_make -j4 -DCMAKE_BUILD_TYPE=Release \
+	&& catkin_make install -DCMAKE_INSTALL_PREFIX=/opt/ros/noetic -DCMAKE_BUILD_TYPE=Release \
+	&& rm -Rf /tmp/* \
+	&& rm -rf /var/lib/apt/lists/*
+
+
+
+
 SHELL ["/bin/sh", "-c"]
 ARG NOW
 WORKDIR /tmp
