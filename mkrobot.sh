@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text ()
 {
-		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tcheckout \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tdeletetag \n\tdeploy \n\tnode \n\tnode_python \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\ttag \n\ttest \n\tupdate"
+		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tcheckout \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tconfigurator \n\tdeletetag \n\tdeploy \n\tnode \n\tnode_python \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\ttag \n\ttest \n\tupdate"
 }
 
 node_help_text()
@@ -69,6 +69,13 @@ checkout()
 				sudo apt-get install -y parallel
 		fi
 		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} checkout ${1}"
+}
+
+configurator()
+{
+	source $SCRIPT_DIR/useful_scripts.sh
+	cd $SCRIPT_DIR/..
+	/usr/bin/env python3 ./ros_dev/configurator.py
 }
 
 commit()
@@ -310,8 +317,8 @@ node_python()
 	cd ${1}
 	find . -type f | grep -v ^.$ | xargs sed -i "s/template_python_node/${1}/g"
 	# find . -type f | grep -v ^.$ | xargs sed -i "s/template_python_node/${1}/g"
+	mv scripts/template_python_node scripts/${1}
 	mv src/template_python_node src/${1}
-	mv src/${1}/template_python_node.py "src/${1}/${1}.py"
 
 	if [ -z "${2}" ]; then
 		return
@@ -630,6 +637,9 @@ case "$1" in
 		;;
 	"commit")
 		commit "$@"
+		;;
+	"configurator")
+		configurator
 		;;
 	"deletetag")
 		deletetag "${2}"
