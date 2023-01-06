@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text ()
 {
-		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tcheckout \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tconfigurator \n\tdeletetag \n\tdeploy \n\tnode \n\tnode_python \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\ttag \n\ttest \n\tupdate"
+		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tcheckout \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tconfigurator \n\tdeletetag \n\tdeploy \n\tnode \n\tnode_python \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\tshort \n\tstatus \n\ttag \n\ttest \n\tupdate"
 }
 
 node_help_text()
@@ -53,6 +53,28 @@ update()
 				sudo apt-get install -y parallel
 		fi
 		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} pull"
+}
+
+status()
+{
+		if ! command -v parallel &> /dev/null
+		then
+				infomsg "Installing parallel..."
+				sudo apt-get update
+				sudo apt-get install -y parallel
+		fi
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} status"
+}
+
+short()
+{
+		if ! command -v parallel &> /dev/null
+		then
+				infomsg "Installing parallel..."
+				sudo apt-get update
+				sudo apt-get install -y parallel
+		fi
+		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} short"
 }
 
 checkout()
@@ -664,6 +686,12 @@ case "$1" in
 		;;
 	"rebuildros")
 		rebuildros
+		;;
+	"short")
+		short
+		;;
+	"status")
+		status
 		;;
 	"tag")
 		tag "${2}" "${3}"
