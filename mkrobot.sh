@@ -251,6 +251,8 @@ deploy()
 		rm -Rf ./trajectories/tmptraj
 	fi
 
+	echo "Cleaning PyCache..."
+	rm -Rf *_Robot/**/__pycache__
 	echo "Packing robot..."
 	tar -hczf ${ROOT_DIR}/rosdeploy.tar.gz *_Robot/*
 	cd  ${ROOT_DIR}
