@@ -242,7 +242,7 @@ deploy()
 
 	if [ -d "./trajectories" ]; then
 		echo "Deploying Trajectories..."
-		rm -Rf /trajectories/tmptraj
+		rm -Rf ./trajectories/tmptraj
 		mkdir -p ./trajectories/tmptraj
 		cp ./trajectories/**/*.json ./trajectories/tmptraj/
 		cp ./trajectories/*.json ./trajectories/tmptraj/ 2>>/dev/null

@@ -223,6 +223,25 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 	mkdir $(pwd)/.vscode
 	cp $(pwd)/ros_dev/vscode_workspace_config/* $(pwd)/.vscode/
 
+
+	cd ./*_trajectories
+	if [ $? -eq 0 ]; then
+		TRAJ_DIR=$(pwd)
+		cd ..
+		echo "Mapping Trajectories..."
+		rm -Rf ./tmptraj
+		mkdir -p ./tmptraj
+		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
+		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
+	else
+		echo "No trajectories found"
+	fi
+
+	TRAJ_CMD=
+	if [[ "${TRAJ_DIR}" != 0 ]]; then
+		TRAJ_CMD=--volume="$(pwd)/tmptraj:/robot/trajectories:ro"
+	fi
+
 	docker run -it ${DETACHED_MODE} --rm \
 		${DISPLAY_FLAGS} \
 		${RENDERING_FLAGS} \
@@ -239,6 +258,7 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		--volume="/etc/gshadow:/etc/gshadow:ro" \
 		--volume="/etc/passwd:/etc/passwd:ro" \
 		--volume="/etc/shadow:/etc/shadow:ro" \
+		${TRAJ_CMD} \
 		--net=host \
 		-e HOME=/mnt/working \
 		guitar24t/ck-ros:${DOCKER_ARCH} \
