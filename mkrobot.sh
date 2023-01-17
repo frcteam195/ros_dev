@@ -240,15 +240,20 @@ deploy()
 	#cd ${FULL_ROSLIB_PATH}
 	cd ${BASE_PATH}/..
 
-	if [ -d "./trajectories" ]; then
+	cd ./*_trajectories
+	if [ $? -eq 0 ]; then
+		TRAJ_DIR=$(pwd)
+		cd ..
 		echo "Deploying Trajectories..."
-		rm -Rf ./trajectories/tmptraj
-		mkdir -p ./trajectories/tmptraj
-		cp ./trajectories/**/*.json ./trajectories/tmptraj/
-		cp ./trajectories/*.json ./trajectories/tmptraj/ 2>>/dev/null
+		rm -Rf ./tmptraj
+		mkdir -p ./tmptraj
+		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
+		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
 		ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no team195@${TARGET_IP} 'rm -Rf /robot/trajectories/*'
-		scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./trajectories/tmptraj/*.json team195@${TARGET_IP}:/robot/trajectories
-		rm -Rf ./trajectories/tmptraj
+		scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./tmptraj/*.json team195@${TARGET_IP}:/robot/trajectories
+		rm -Rf ./tmptraj
+	else
+		echo "No trajectories found"
 	fi
 
 	echo "Cleaning PyCache..."
