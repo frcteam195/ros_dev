@@ -209,19 +209,38 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 0 && ${CONTAINER_ID} == "" ]]; then
 fi
 
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
-	WKSP_DIR=$(pwd)
-	CURR_VSCODE1_MD5=($(md5sum ${WKSP_DIR}/.vscode/c_cpp_properties.json))
-	CURR_VSCODE2_MD5=($(md5sum ${WKSP_DIR}/.vscode/settings.json))
-	EXP_VSCODE1_MD5=($(md5sum ${WKSP_DIR}/ros_dev/vscode_workspace_config/c_cpp_properties.json))
-	EXP_VSCODE2_MD5=($(md5sum ${WKSP_DIR}/ros_dev/vscode_workspace_config/settings.json))
-	if [[ ${CURR_VSCODE1_MD5} != ${EXP_VSCODE1_MD5} || ${CURR_VSCODE2_MD5} != ${EXP_VSCODE2_MD5} ]]; then
-		echo "Your current vscode config does not match expected. Press any key to replace config with proper config for workspace..."
-		read -n 1 k <&1
+	#WKSP_DIR=$(pwd)
+	#CURR_VSCODE1_MD5=($(md5sum ${WKSP_DIR}/.vscode/c_cpp_properties.json))
+	#CURR_VSCODE2_MD5=($(md5sum ${WKSP_DIR}/.vscode/settings.json))
+	#EXP_VSCODE1_MD5=($(md5sum ${WKSP_DIR}/ros_dev/vscode_workspace_config/c_cpp_properties.json))
+	#EXP_VSCODE2_MD5=($(md5sum ${WKSP_DIR}/ros_dev/vscode_workspace_config/settings.json))
+	# if [[ ${CURR_VSCODE1_MD5} != ${EXP_VSCODE1_MD5} || ${CURR_VSCODE2_MD5} != ${EXP_VSCODE2_MD5} ]]; then
+	#	echo "Your current vscode config does not match expected. Press any key to replace config with proper config for workspace..."
+	#	read -n 1 k <&1
+	# fi
+
+	# rm -Rf $(pwd)/.vscode
+	# mkdir $(pwd)/.vscode
+	# cp $(pwd)/ros_dev/vscode_workspace_config/* $(pwd)/.vscode/
+
+
+	cd ./*_trajectories
+	if [ $? -eq 0 ]; then
+		TRAJ_DIR=$(pwd)
+		cd ..
+		echo "Mapping Trajectories..."
+		rm -Rf ./tmptraj
+		mkdir -p ./tmptraj
+		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
+		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
+	else
+		echo "No trajectories found"
 	fi
 
-	rm -Rf $(pwd)/.vscode
-	mkdir $(pwd)/.vscode
-	cp $(pwd)/ros_dev/vscode_workspace_config/* $(pwd)/.vscode/
+	TRAJ_CMD=
+	if [[ "${TRAJ_DIR}" != 0 ]]; then
+		TRAJ_CMD=--volume="$(pwd)/tmptraj:/robot/trajectories:ro"
+	fi
 
 	docker run -it ${DETACHED_MODE} --rm \
 		${DISPLAY_FLAGS} \
@@ -239,6 +258,7 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		--volume="/etc/gshadow:/etc/gshadow:ro" \
 		--volume="/etc/passwd:/etc/passwd:ro" \
 		--volume="/etc/shadow:/etc/shadow:ro" \
+		${TRAJ_CMD} \
 		--net=host \
 		-e HOME=/mnt/working \
 		guitar24t/ck-ros:${DOCKER_ARCH} \
