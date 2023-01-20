@@ -76,5 +76,9 @@
         "*.inc": "cpp",
         "any": "cpp",
         "filesystem": "cpp"
-    }
+    },
+    "python.analysis.extraPaths": [
+        // "./**/src",
+        // "./**/catkin_ws/devel/lib/python3/dist-packages"
+    ]
 }
