@@ -209,19 +209,19 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 0 && ${CONTAINER_ID} == "" ]]; then
 fi
 
 if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
-	#WKSP_DIR=$(pwd)
-	#CURR_VSCODE1_MD5=($(md5sum ${WKSP_DIR}/.vscode/c_cpp_properties.json))
+	WKSP_DIR=$(pwd)
+	CURR_VSCODE1_MD5=($(md5sum ${WKSP_DIR}/.vscode/c_cpp_properties.json))
 	#CURR_VSCODE2_MD5=($(md5sum ${WKSP_DIR}/.vscode/settings.json))
-	#EXP_VSCODE1_MD5=($(md5sum ${WKSP_DIR}/ros_dev/vscode_workspace_config/c_cpp_properties.json))
+	EXP_VSCODE1_MD5=($(md5sum ${WKSP_DIR}/ros_dev/vscode_workspace_config/c_cpp_properties.json))
 	#EXP_VSCODE2_MD5=($(md5sum ${WKSP_DIR}/ros_dev/vscode_workspace_config/settings.json))
-	# if [[ ${CURR_VSCODE1_MD5} != ${EXP_VSCODE1_MD5} || ${CURR_VSCODE2_MD5} != ${EXP_VSCODE2_MD5} ]]; then
-	#	echo "Your current vscode config does not match expected. Press any key to replace config with proper config for workspace..."
-	#	read -n 1 k <&1
-	# fi
+	#|| ${CURR_VSCODE2_MD5} != ${EXP_VSCODE2_MD5}
+	if [[ ${CURR_VSCODE1_MD5} != ${EXP_VSCODE1_MD5} ]]; then
+		echo "Your current cpp vscode config does not match expected. Press any key to replace config with proper config for workspace..."
+		read -n 1 k <&1
+	fi
 
-	# rm -Rf $(pwd)/.vscode
-	# mkdir $(pwd)/.vscode
-	# cp $(pwd)/ros_dev/vscode_workspace_config/* $(pwd)/.vscode/
+	rm -Rf $(pwd)/.vscode/c_cpp_properties.json
+	cp $(pwd)/ros_dev/vscode_workspace_config/c_cpp_properties.json $(pwd)/.vscode/c_cpp_properties.json
 
 
 	cd ./*_trajectories
