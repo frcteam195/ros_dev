@@ -80,6 +80,7 @@ short()
 reclone()
 {
 	rm -Rf ./*_node
+	update
 	clone
 }
 
