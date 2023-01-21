@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/useful_scripts.sh"
 
 help_text ()
 {
-		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tcheckout \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tconfigurator \n\tdeletetag \n\tdeploy \n\tnode \n\tnode_python \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\tshort \n\tstatus \n\ttag \n\ttest \n\tupdate"
+		errmsg "No arguments provided, supported arguments are:\n\tbuild \n\tcheckout \n\tclone \n\tclean \n\tcleanlibs \n\tcleanros \n\tcommit \n\tconfigurator \n\tdeletetag \n\tdeploy \n\tnode \n\tnode_python \n\tpush \n\trebuild \n\trebuildlibs \n\trebuildros \n\treclone \n\tshort \n\tstatus \n\ttag \n\ttest \n\tupdate"
 }
 
 node_help_text()
@@ -75,6 +75,12 @@ short()
 				sudo apt-get install -y parallel
 		fi
 		find . -name ".git" -type d -exec dirname {} \; | parallel -k "echo {}; git -C {} short"
+}
+
+reclone()
+{
+	rm -Rf ./*_node
+	clone
 }
 
 checkout()
@@ -693,6 +699,9 @@ case "$1" in
 		;;
 	"rebuildros")
 		rebuildros
+		;;
+	"reclone")
+		reclone
 		;;
 	"short")
 		short
