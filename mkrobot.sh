@@ -248,7 +248,7 @@ deploy()
 	#cd ${FULL_ROSLIB_PATH}
 	cd ${BASE_PATH}/..
 
-	cd ./*_trajectories
+	cd ./*trajectories_*
 	if [ $? -eq 0 ]; then
 		TRAJ_DIR=$(pwd)
 		cd ..

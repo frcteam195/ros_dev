@@ -229,7 +229,7 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 	cp $(pwd)/ros_dev/vscode_workspace_config/c_cpp_properties.json $(pwd)/.vscode/c_cpp_properties.json
 
 
-	cd ./*_trajectories
+	cd ./*trajectories_*
 	if [ $? -eq 0 ]; then
 		TRAJ_DIR=$(pwd)
 		cd ..
