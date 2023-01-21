@@ -79,6 +79,7 @@ short()
 
 reclone()
 {
+	cd $SCRIPT_DIR/..
 	rm -Rf ./*_node
 	update
 	clone
