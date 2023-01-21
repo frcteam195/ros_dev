@@ -80,6 +80,7 @@ short()
 reclone()
 {
 	cd $SCRIPT_DIR/..
+	rm -Rf ./*trajectories*
 	rm -Rf ./*_node
 	update
 	clone
