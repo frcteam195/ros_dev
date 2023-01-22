@@ -80,5 +80,9 @@
     "python.analysis.extraPaths": [
         // "./**/src",
         // "./**/catkin_ws/devel/lib/python3/dist-packages"
+    ],
+    "python.formatting.provider": "autopep8",
+    "python.formatting.autopep8Args": [
+        "--max-line-length=160"
     ]
 }
