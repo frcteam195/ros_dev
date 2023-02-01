@@ -254,13 +254,12 @@ deploy()
 		TRAJ_DIR=$(pwd)
 		cd ..
 		echo "Deploying Trajectories..."
-		rm -Rf ./tmptraj
 		mkdir -p ./tmptraj
+		rm -Rf ./tmptraj/**
 		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
 		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
 		ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no team195@${TARGET_IP} 'rm -Rf /robot/trajectories/* && mkdir -p /robot/trajectories && chown team195:team195 /robot/trajectories'
 		scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./tmptraj/*.json team195@${TARGET_IP}:/robot/trajectories
-		rm -Rf ./tmptraj
 	else
 		echo "No trajectories found"
 	fi

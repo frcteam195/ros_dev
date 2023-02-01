@@ -234,8 +234,8 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		TRAJ_DIR=$(pwd)
 		cd ..
 		echo "Mapping Trajectories..."
-		rm -Rf ./tmptraj
 		mkdir -p ./tmptraj
+		rm -Rf ./tmptraj/**
 		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
 		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
 	else
