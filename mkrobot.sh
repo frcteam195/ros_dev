@@ -279,20 +279,20 @@ deploy()
 node()
 {
 	if [ -z "${1}" ]; then
-		errmsg "\nNode name is not specified. Please enter a node name" "noexit"
+		errmsg "\nNode name is not specified. Please enter a node name." "noexit"
 		node_help_text
 		return
 	fi
 	if [[ "${1}" = *[[:space:]]* ]]
 	then
-		errmsg "\nPlease enter a node name that does not have any spaces"
+		errmsg "\nPlease enter a node name that does not have any spaces."
 		node_help_text
 		return
 	fi
 
 	if [[ "${1}" != *_node ]]
 	then
-		errmsg "\nPlease enter a node name that ends in node"
+		errmsg "\nPlease enter a node name that ends in node."
 		node_help_text
 		return
 	fi
@@ -328,34 +328,37 @@ node()
 node_python()
 {
 	if [ -z "${1}" ]; then
-		errmsg "\nNode name is not specified. Please enter a node name" "noexit"
+		errmsg "\nNode name is not specified. Please enter a node name." "noexit"
 		node_help_text
 		return
 	fi
 	if [[ "${1}" = *[[:space:]]* ]]
 	then
-		errmsg "\nPlease enter a node name that does not have any spaces"
+		errmsg "\nPlease enter a node name that does not have any spaces."
 		node_help_text
 		return
 	fi
 
 	if [[ "${1}" != *_node ]]
 	then
-		errmsg "\nPlease enter a node name that ends in node"
+		errmsg "\nPlease enter a node name that ends in node."
 		node_help_text
 		return
 	fi
+
+	node_name=${1}
+	class_name=$(echo "$node_name" | sed -e "s/_/ /g" | sed -e "s/\b\(.\)/\u\1/g" | sed "s/[[:blank:]]//g")
 
 	cd $SCRIPT_DIR/..
 	git clone git@github.com:frcteam195/template_python_node.git
 	rm -Rf template_python_node/.git
 
-	mv template_python_node/ "${1}/"
-	cd ${1}
-	find . -type f | grep -v ^.$ | xargs sed -i "s/template_python_node/${1}/g"
-	# find . -type f | grep -v ^.$ | xargs sed -i "s/template_python_node/${1}/g"
-	mv scripts/template_python_node scripts/${1}
-	mv src/template_python_node src/${1}
+	mv template_python_node/ "$node_name/"
+	cd $node_name
+	find . -type f | grep -v ^.$ | xargs sed -i "s/template_python_node/$node_name/g"
+	find . -type f | grep -v ^.$ | xargs sed -i "s/TemplatePythonNode/$class_name/g"
+	mv scripts/template_python_node scripts/$node_name
+	mv src/template_python_node src/$node_name
 
 	if [ -z "${2}" ]; then
 		return
@@ -363,8 +366,8 @@ node_python()
 	cd $SCRIPT_DIR/..
 	git clone "${2}" temp_repo
 	shopt -s dotglob
-	mv temp_repo/* "${1}"
-	cd "${1}"
+	mv temp_repo/* "$node_name"
+	cd "$node_name"
 	git add -A
 	git commit -m "Initial commit"
 	git push
