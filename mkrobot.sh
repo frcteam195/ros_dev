@@ -206,11 +206,17 @@ launch()
 	fi
 	echo "Using launchfile ${LAUNCH_FILE}"
 
-	echo "Deploying Trajectories..."
-	mkdir -p ./tmptraj
-	rm -Rf ./tmptraj/**
-	cp ${TRAJ_DIR}/**/*.json ./tmptraj/
-	cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
+	cd ${SCRIPT_DIR}/..
+	cd ./*trajectories_*
+	if [ $? -eq 0 ]; then
+		TRAJ_DIR=$(pwd)
+		cd ..
+		echo "Deploying Trajectories..."
+		mkdir -p ./tmptraj
+		rm -Rf ./tmptraj/**
+		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
+		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
+	fi
 
 	roslaunch "${LAUNCH_FILE}"
 }
