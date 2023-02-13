@@ -88,8 +88,11 @@
     "python.linting.pylintEnabled": true,
     "pylint.args": [
         "--max-line-length=160",
+        "--disable=C0103",
+        "--disable=C0114",
         "--disable=E0401",
         "--disable=E0611",
-        "--disable=C0114"
+        "--disable=W0401",
+        "--disable=W0614"
     ]
 }
