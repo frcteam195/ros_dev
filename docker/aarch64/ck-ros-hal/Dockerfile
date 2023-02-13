@@ -1,6 +1,6 @@
-FROM nvcr.io/nvidia/l4t-base:r35.1.0
+FROM nvcr.io/nvidia/l4t-base:r35.2.1
 LABEL Name="ck-ros-hal-aarch64"
-LABEL Version="35.1.0"
+LABEL Version="35.2.1"
 USER root
 ARG DEBIAN_FRONTEND=noninteractive
 ARG GITLFSVER=3.2.0
