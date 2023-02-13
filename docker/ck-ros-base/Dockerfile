@@ -113,7 +113,7 @@ SHELL ["/bin/sh", "-c"]
 WORKDIR /tmp
 RUN git clone https://github.com/wpilibsuite/allwpilib \
 	&& cd /tmp/allwpilib \
-	&& git checkout cf1a411acf3c494e556f325001c1d451e360aba7 \
+	&& git checkout d66555e \
 	&& mkdir build \
 	&& cd /tmp/allwpilib/build \
 	&& cmake -DWITH_JAVA=OFF -DWITH_TESTS=OFF -DWITH_CSCORE=OFF -DWITH_WPIMATH=OFF -DWITH_WPILIB=OFF -DWITH_GUI=OFF -DWITH_SIMULATION_MODULES=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/usr/local .. \
@@ -142,7 +142,7 @@ RUN git clone https://github.com/GNOME/libxml2.git \
         && rm -Rf /tmp/*
 
 RUN apt-get update \
-	&& apt-get install -y default-jdk openscenegraph libopenscenegraph-dev libbullet-dev  \
+	&& apt-get install -y openjdk-17-jdk openscenegraph libopenscenegraph-dev libbullet-dev  \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/frcteam195/osgworks.git \
