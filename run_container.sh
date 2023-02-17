@@ -238,6 +238,8 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		rm -Rf ./tmptraj/**
 		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
 		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
+		cp ${TRAJ_DIR}/**/*.shoe ./tmptraj/
+		cp ${TRAJ_DIR}/*.shoe ./tmptraj/ 2>>/dev/null
 	else
 		echo "No trajectories found"
 	fi
