@@ -68,4 +68,11 @@ RUN apt-get update \
 	&& apt-get install -y libi2c-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update \
+	&& apt-get remove -y python3-opencv python3-numpy \
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install numpy \
+	&& pip3 install opencv-python
+
 WORKDIR /mnt/working
