@@ -66,4 +66,7 @@ RUN apt-get update \
 	&& apt-get install -y libi2c-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
+RUN pip install numpy --upgrade --ignore-installed \
+	&& pip install opencv-python --upgrade --ignore-installed
+
 WORKDIR /mnt/working
