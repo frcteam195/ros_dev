@@ -38,9 +38,7 @@ RUN apt-get update \
 SHELL ["/bin/bash", "-c"]
 RUN mkdir -p /tmp/catkin_ws/src \
 	&& cd /tmp/catkin_ws/src \
-	&& git clone https://github.com/cra-ros-pkg/robot_localization.git \
-	&& cd /tmp/catkin_ws/src/robot_localization \
-	&& git checkout bd5d0fee8771e3b8e7dec9b7085d8e7ccc3ff1ff \
+	&& git clone https://github.com/frcteam195/robot_localization.git \
 	&& cd /tmp/catkin_ws \
 	&& source /opt/ros/noetic/setup.bash \
 	&& apt-get update \
