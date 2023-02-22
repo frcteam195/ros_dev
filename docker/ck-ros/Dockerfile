@@ -49,6 +49,14 @@ RUN mkdir -p /tmp/catkin_ws/src \
 	&& rm -rf /var/lib/apt/lists/*
 
 
+RUN apt-get update \
+        && apt-get install -y zsh \
+        && wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
+	&& chmod +x install.sh \
+	&& ./install.sh --unattended \
+	&& mv /root/.oh-my-zsh /etc/oh-my-zsh \
+	&& chmod -R 775 /etc/oh-my-zsh \
+        && rm -rf /var/lib/apt/lists/*
 
 
 SHELL ["/bin/sh", "-c"]
@@ -56,7 +64,9 @@ ARG NOW
 WORKDIR /tmp
 RUN git clone https://github.com/frcteam195/container_support_files \
 	&& cat container_support_files/bash.bashrc > /etc/bash.bashrc \
+	&& cat container_support_files/zsh.zshrc > /etc/zsh/zshrc \
 	&& rm -Rf /root/.bashrc \
+	&& rm -Rf /root/.zshrc \
 	&& rm -Rf /root/.profile \
 	&& cp -r /root/.ros /mnt/.ros \
 	&& cp -r /root/.cache /mnt/.cache \
@@ -68,5 +78,6 @@ RUN apt-get update \
 
 RUN pip install numpy --upgrade --ignore-installed \
 	&& pip install opencv-python --upgrade --ignore-installed
+
 
 WORKDIR /mnt/working
