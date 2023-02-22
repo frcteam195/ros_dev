@@ -93,6 +93,7 @@
         "--disable=E0401",
         "--disable=E0611",
         "--disable=W0401",
-        "--disable=W0614"
+        "--disable=W0614",
+        "--disable=W0702"
     ]
 }
