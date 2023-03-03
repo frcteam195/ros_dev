@@ -73,7 +73,7 @@ RUN git clone https://github.com/frcteam195/container_support_files \
 	&& rm -Rf /tmp/*
 	
 RUN apt-get update \
-	&& apt-get install -y libi2c-dev \
+	&& apt-get install -y libi2c-dev ros-noetic-moveit ros-noetic-ros-control ros-noetic-ros-controllers ros-noetic-rosparam-shortcuts libgflags-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN pip install numpy --upgrade --ignore-installed \
