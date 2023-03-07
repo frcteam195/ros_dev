@@ -90,7 +90,7 @@ RUN python3 -m pip install --upgrade pip setuptools wheel \
 	&& sed -i 's/pyinstaller==3.6/pyinstaller/g' requirements.txt \
 	&& python3 -m pip install -r requirements.txt \
 	&& python3 setup.py build --qtpaths=/usr/local/Qt-6.4.0/bin/qtpaths --ignore-git --parallel 4 --standalone \
-	&& python setup.py install --qtpaths=/usr/local/Qt-6.4.0/bin/qtpaths --ignore-git --parallel 4 --standalone --reuse-build \
+	&& python3 setup.py install --qtpaths=/usr/local/Qt-6.4.0/bin/qtpaths --ignore-git --parallel 4 --standalone --reuse-build \
 	&& cd /tmp \
 	&& rm -Rf /tmp/*
 
