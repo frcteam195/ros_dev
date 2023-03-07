@@ -58,19 +58,6 @@ RUN apt-get update \
 	&& chmod -R 775 /etc/oh-my-zsh \
         && rm -rf /var/lib/apt/lists/*
 
-
-SHELL ["/bin/sh", "-c"]
-ARG NOW
-WORKDIR /tmp
-RUN git clone https://github.com/frcteam195/container_support_files \
-	&& cat container_support_files/bash.bashrc > /etc/bash.bashrc \
-	&& cat container_support_files/zsh.zshrc > /etc/zsh/zshrc \
-	&& rm -Rf /root/.bashrc \
-	&& rm -Rf /root/.zshrc \
-	&& rm -Rf /root/.profile \
-	&& cp -r /root/.ros /mnt/.ros \
-	&& cp -r /root/.cache /mnt/.cache \
-	&& rm -Rf /tmp/*
 	
 RUN apt-get update \
 	&& apt-get install -y libi2c-dev ros-noetic-moveit ros-noetic-ros-control ros-noetic-ros-controllers ros-noetic-rosparam-shortcuts libgflags-dev \
@@ -106,6 +93,20 @@ RUN python3 -m pip install --upgrade pip setuptools wheel \
 	&& python setup.py install --qtpaths=/usr/local/Qt-6.4.0/bin/qtpaths --ignore-git --parallel 4 --standalone --reuse-build \
 	&& cd /tmp \
 	&& rm -Rf /tmp/*
+
+
+SHELL ["/bin/sh", "-c"]
+ARG NOW
+WORKDIR /tmp
+RUN git clone https://github.com/frcteam195/container_support_files \
+        && cat container_support_files/bash.bashrc > /etc/bash.bashrc \
+        && cat container_support_files/zsh.zshrc > /etc/zsh/zshrc \
+        && rm -Rf /root/.bashrc \
+        && rm -Rf /root/.zshrc \
+        && rm -Rf /root/.profile \
+        && cp -r /root/.ros /mnt/.ros \
+        && cp -r /root/.cache /mnt/.cache \
+        && rm -Rf /tmp/*
 
 
 WORKDIR /mnt/working
