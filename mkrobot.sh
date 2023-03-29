@@ -214,8 +214,8 @@ launch()
 		echo "Deploying Trajectories..."
 		mkdir -p ./tmptraj
 		rm -Rf ./tmptraj/**
-		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
-		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
+		# cp ${TRAJ_DIR}/**/*.json ./tmptraj/
+		# cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
 		cp ${TRAJ_DIR}/**/*.shoe ./tmptraj/
 		cp ${TRAJ_DIR}/*.shoe ./tmptraj/ 2>>/dev/null
 	fi
@@ -270,8 +270,8 @@ deploy()
 		echo "Deploying Trajectories..."
 		mkdir -p ./tmptraj
 		rm -Rf ./tmptraj/**
-		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
-		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
+		# cp ${TRAJ_DIR}/**/*.json ./tmptraj/
+		# cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
 		cp ${TRAJ_DIR}/**/*.shoe ./tmptraj/
 		cp ${TRAJ_DIR}/*.shoe ./tmptraj/ 2>>/dev/null
 

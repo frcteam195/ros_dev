@@ -236,8 +236,8 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		echo "Mapping Trajectories..."
 		mkdir -p ./tmptraj
 		rm -Rf ./tmptraj/**
-		cp ${TRAJ_DIR}/**/*.json ./tmptraj/
-		cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
+		# cp ${TRAJ_DIR}/**/*.json ./tmptraj/
+		# cp ${TRAJ_DIR}/*.json ./tmptraj/ 2>>/dev/null
 		cp ${TRAJ_DIR}/**/*.shoe ./tmptraj/
 		cp ${TRAJ_DIR}/*.shoe ./tmptraj/ 2>>/dev/null
 	else
@@ -248,6 +248,8 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 	if [[ "${TRAJ_DIR}" != 0 ]]; then
 		TRAJ_CMD=--volume="$(pwd)/tmptraj:/robot/trajectories:ro"
 	fi
+
+	#	--volume="/etc/sudoers:/etc/sudoers:ro" \
 
 	docker run -it ${DETACHED_MODE} --rm \
 		${DISPLAY_FLAGS} \
