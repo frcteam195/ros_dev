@@ -95,6 +95,13 @@ RUN python3 -m pip install --upgrade pip setuptools wheel \
 	&& rm -Rf /tmp/*
 
 
+RUN add-apt-repository ppa:maveonair/helix-editor \
+	&& apt-get update \
+	&& apt-get install -y clangd bear helix \
+	&& python3 -m pip install python-lsp-server \
+	&& rm -rf /var/lib/apt/lists/*
+
+
 SHELL ["/bin/sh", "-c"]
 ARG NOW
 WORKDIR /tmp
