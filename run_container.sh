@@ -259,6 +259,7 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		-e XAUTHORITY=${XAUTH} \
 		-v $(pwd):/mnt/working \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
+	  -v /home/${USER}/.config/:/mnt/working/.config/ \
 		${USER_HOME_MAPPING_FLAGS} \
 		-v ${XAUTH}:${XAUTH} \
 		${DCUDA_FLAGS} \
