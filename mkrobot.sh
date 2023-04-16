@@ -276,7 +276,7 @@ deploy()
 		cp ${TRAJ_DIR}/*.shoe ./tmptraj/ 2>>/dev/null
 
 		ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no team195@${TARGET_IP} 'rm -Rf /robot/trajectories/* && mkdir -p /robot/trajectories && chown team195:team195 /robot/trajectories'
-		scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./tmptraj/*.json team195@${TARGET_IP}:/robot/trajectories
+		# scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./tmptraj/*.json team195@${TARGET_IP}:/robot/trajectories
 		scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ./tmptraj/*.shoe team195@${TARGET_IP}:/robot/trajectories
 	else
 		echo "No trajectories found"
