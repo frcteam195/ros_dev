@@ -249,6 +249,23 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		TRAJ_CMD=--volume="$(pwd)/tmptraj:/robot/trajectories:ro"
 	fi
 
+
+	CURR_WORKING_DIR=$(pwd)
+
+
+	cd "/home/${USER}/.config"
+	if [ $? -eq 0 ]; then
+		HX_CONFIG_DIR=$(pwd)
+		cd "${CURR_WORKING_DIR}"
+	else
+		echo "No config directory found"
+	fi
+
+	HX_CONFIG_CMD=
+	if [[ "${HX_CONFIG_DIR}" != 0 ]]; then
+		HX_CONFIG_CMD=--volume="/home/${USER}/.config:/mnt/working/.config:rw"
+	fi
+
 	#	--volume="/etc/sudoers:/etc/sudoers:ro" \
 
 	docker run -it ${DETACHED_MODE} --rm \
@@ -259,7 +276,6 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		-e XAUTHORITY=${XAUTH} \
 		-v $(pwd):/mnt/working \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-	  -v /home/${USER}/.config/:/mnt/working/.config/ \
 		${USER_HOME_MAPPING_FLAGS} \
 		-v ${XAUTH}:${XAUTH} \
 		${DCUDA_FLAGS} \
@@ -268,6 +284,7 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		--volume="/etc/gshadow:/etc/gshadow:ro" \
 		--volume="/etc/passwd:/etc/passwd:ro" \
 		--volume="/etc/shadow:/etc/shadow:ro" \
+		${HX_CONFIG_CMD} \
 		${TRAJ_CMD} \
 		--net=host \
 		-e HOME=/mnt/working \
