@@ -516,7 +516,7 @@ build ()
 		then
 			infomsg "Making third party libraries..."
 			cd third_party_libs
-			cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && if [ -f \"Makefile\" ]; then make ${BUILD_ARCHITECTURE}; fi"
+			cat ../*_Robot/third_party_projects.txt | grep -v "^#.*$" | sed s:^.*/::g | sed s:.git.*$::g | xargs -I {} sh -c "echo 'Attempting to make {}' && cd {} && if [ -f \"Makefile\" ]; then make; fi"
 		fi
 
 		cd $SCRIPT_DIR/..
