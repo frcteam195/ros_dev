@@ -317,6 +317,9 @@ node()
 
 	cd $SCRIPT_DIR/..
 	git clone git@github.com:frcteam195/template_node.git
+ 	cd template_node
+  	git checkout ros1
+   	cd ..
 	rm -Rf template_node/.git
 
 	mv template_node/ "${1}/"
