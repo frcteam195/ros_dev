@@ -372,6 +372,9 @@ node_python()
 
 	cd $SCRIPT_DIR/..
 	git clone git@github.com:frcteam195/template_python_node.git
+ 	cd template_python_node
+  	git checkout ros1
+   	cd ..
 	rm -Rf template_python_node/.git
 
 	mv template_python_node/ "$node_name/"
