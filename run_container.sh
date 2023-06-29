@@ -273,6 +273,7 @@ if [[ "${DOCKER_RUNNING_CMD}" -eq 1 || "${COMMAND_NEEDS_LAUNCH}" -eq 0 ]]; then
 		${RENDERING_FLAGS} \
 		${USER_FLAGS} \
 		--ipc="host" \
+  		--name="ckros_docker" \
 		-e XAUTHORITY=${XAUTH} \
 		-v $(pwd):/mnt/working \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
